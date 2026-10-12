@@ -54,11 +54,10 @@
   .nav .logo { font-weight: 800; letter-spacing: -.02em; white-space: nowrap; text-decoration: none; }
   .nav .logo span { color: var(--accent); }
   .nav .logo { display: inline-flex; align-items: center; gap: 8px; }
-  .nav .logo img { border-radius: 50%; }
+  .hero-title { display: flex; align-items: center; gap: clamp(14px, 2.5vw, 24px); margin: 16px 0 14px; }
+  .hero .hero-title h1 { margin: 0; }
   .school-mark {
-    display: block; width: 104px; height: 104px; margin-bottom: 22px;
-    border-radius: 50%; background: #fff;
-    box-shadow: 0 0 0 6px var(--card), 0 0 0 7px var(--line), var(--shadow);
+    flex: none; width: clamp(72px, 10vw, 118px); height: auto;
   }
   .nav ul {
     list-style: none; margin: 0 0 0 auto; padding: 0;
@@ -268,7 +267,7 @@
     .hero { padding: 48px 0 56px; }
     .hero .wrap { grid-template-columns: 1fr; }
     .hero-art { display: none; }
-    .school-mark { width: 88px; height: 88px; }
+    .school-mark { width: 64px; }
     .share, .two, .route { grid-template-columns: 1fr; }
     .slot { grid-template-columns: 1fr; gap: 10px; }
     .slot-time { padding: 12px 0 0; }
@@ -287,7 +286,7 @@
 
 <nav class="nav">
   <div class="wrap">
-    <a class="logo" href="#top"><img src="images/logo.jpg" alt="" width="30" height="30">명지중 <span>수업 나눔</span></a>
+    <a class="logo" href="#top"><img src="images/logo.png" alt="" width="30" height="30">명지중 <span>수업 나눔</span></a>
     <ul>
       <li><a href="#schedule">시간표</a></li>
       <li><a href="#lessons">공개 수업</a></li>
@@ -304,9 +303,11 @@
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <img class="school-mark" src="images/logo.jpg" alt="명지중학교 교표" width="104" height="104">
       <span class="eyebrow">2026 Myongji Middle School</span>
-      <h1>2026학년도 <em>AI·디지털 활용</em><br>선도학교 수업 나눔</h1>
+      <div class="hero-title">
+        <h1>2026학년도 <em>AI·디지털 활용</em><br>선도학교 수업 나눔</h1>
+        <img class="school-mark" src="images/logo.png" alt="명지중학교 교표" width="231" height="234">
+      </div>
       <p class="sub">바이브코딩으로 여는 수업과 학교 업무</p>
       <div class="meta">
         <span class="chip">
@@ -403,8 +404,7 @@
           <h3>명지중 AI교무실</h3>
           <p>우리 학교 교사들이 바이브코딩으로 직접 만들어 쓰고 있는 업무 웹앱을 공개합니다. 미리 둘러보시고 오시면 사례 나눔이 더 와닿습니다.</p>
         </div>
-        <!-- TODO: AI교무실 웹앱 주소가 정해지면 href를 바꾸고 disabled 클래스를 지우세요 -->
-        <a class="btn disabled" id="ai-office-link" href="#" target="_blank" rel="noopener">AI교무실 열어 보기 → (주소 준비 중)</a>
+        <a class="btn" id="ai-office-link" href="https://cleveranawim-source.github.io/ai-office-guide/deck.html#1" target="_blank" rel="noopener">AI교무실 열어 보기 →</a>
       </aside>
     </div>
   </div>
