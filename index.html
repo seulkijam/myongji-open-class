@@ -201,6 +201,61 @@
     border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-bottom: 10px;
   }
 
+  /* ---------- 참관 신청 폼 ---------- */
+  .apply-form { padding: 36px; margin-bottom: 20px; }
+  .apply-form .form-head { padding-bottom: 20px; margin-bottom: 26px; border-bottom: 1px solid var(--line); }
+  .apply-form .form-head h3 { margin: 0 0 6px; font-size: 21px; letter-spacing: -.025em; line-height: 1.45; }
+  .apply-form .form-head p { margin: 0; font-size: 14px; color: var(--ink-3); }
+  .apply-form .form-head a { color: var(--accent); font-weight: 600; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; }
+  .field { display: grid; gap: 7px; align-content: start; min-width: 0; }
+  .field.full { grid-column: 1 / -1; }
+  .field > label, .field legend { font-weight: 700; font-size: 15px; padding: 0; }
+  .field .num { color: var(--accent); margin-right: 4px; }
+  .field .req { color: #b0503a; margin-left: 2px; }
+  .field .hint { font-size: 13px; color: var(--ink-3); font-weight: 500; }
+  fieldset.field { border: 0; margin: 0; padding: 0; }
+  .field input[type=text], .field input[type=tel], .field input[type=email], .field input[type=number], .field select {
+    width: 100%; font: inherit; font-size: 16px; color: var(--ink);
+    padding: 11px 14px; border-radius: 12px;
+    border: 1px solid var(--line); background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field input[aria-invalid=true], .field select[aria-invalid=true] { border-color: #b0503a; }
+  .picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
+  .pick {
+    display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+    padding: 14px 16px; border-radius: 14px; background: #fff;
+    border: 1px solid var(--line); border-left: 4px solid var(--c);
+    transition: background .15s, border-color .15s;
+  }
+  .pick:has(input:checked) { background: var(--accent-soft); border-color: var(--c); }
+  .pick input { margin: 4px 0 0; accent-color: var(--ink); width: 18px; height: 18px; flex: none; }
+  .pick b { display: block; font-size: 15px; }
+  .pick span { display: block; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .consent { background: var(--bg); border-radius: 14px; padding: 18px 20px; font-size: 14px; color: var(--ink-2); }
+  .consent dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0 0 10px; }
+  .consent dt { font-weight: 700; color: var(--ink); }
+  .consent dd { margin: 0; }
+  .consent p { margin: 0 0 14px; }
+  .consent label { display: flex; gap: 10px; align-items: center; font-weight: 700; color: var(--ink); font-size: 15px; cursor: pointer; }
+  .consent input { width: 18px; height: 18px; accent-color: var(--ink); margin: 0; }
+  .form-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 28px; }
+  .form-foot button { cursor: pointer; font-family: inherit; }
+  .form-foot button:disabled { opacity: .5; cursor: wait; transform: none; }
+  .form-msg { margin: 0; font-size: 14px; font-weight: 600; }
+  .form-msg.error { color: #b0503a; }
+  .form-done { text-align: center; padding: 28px 0 8px; }
+  .form-done h3 { font-size: 22px; margin: 0 0 8px; }
+  .form-done p { color: var(--ink-2); margin: 0 0 4px; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  @media (max-width: 640px) {
+    .apply-form { padding: 24px 20px; }
+    .fields { grid-template-columns: 1fr; }
+    .br-wide { display: none; }
+  }
+
   /* ---------- 오시는 길 ---------- */
   .route { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .route .addr { padding: 28px; }
@@ -408,18 +463,74 @@
       <h2>참관 신청</h2>
       <p>교실 공간이 한정되어 있어 사전 신청을 받습니다.</p>
     </div>
-    <div class="two">
-      <div class="card panel">
-        <span class="status">신청서 준비 중</span>
-        <h3>참관 신청서</h3>
-        <p>신청서 양식과 신청 기간은 곧 안내드립니다.</p>
-        <ul>
-          <li>5교시·6교시 중 참관할 수업 선택</li>
-          <li>7교시 사례 나눔(15:15) 참석 여부</li>
-        </ul>
-        <!-- TODO: 신청 폼 주소가 정해지면 href를 바꾸고 disabled 클래스를 지우세요 -->
-        <a class="btn primary disabled" href="#" target="_blank" rel="noopener">신청서 작성하기 →</a>
+    <form class="card apply-form" id="apply-form" novalidate>
+      <div class="form-head">
+        <h3>2026 명지중학교 AI·디지털 활용 선도학교<br class="br-wide"> 수업나눔 참관 신청</h3>
+        <p>문의: 명지중학교 정보교육부장 임슬기(<a href="mailto:seulsamo1@naver.com">seulsamo1@naver.com</a>)</p>
       </div>
+
+      <div class="fields">
+        <div class="field">
+          <label for="f-office"><span class="num">1.</span>지원청<span class="req">*</span></label>
+          <select id="f-office" name="office" required>
+            <option value="">선택해 주세요</option>
+            <option>동부</option><option>서부</option><option>남부</option><option>북부</option>
+            <option>중부</option><option>강남서초</option><option>강동송파</option><option>강서양천</option>
+            <option>동작관악</option><option>성동광진</option><option>성북강북</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-school"><span class="num">2.</span>학교<span class="req">*</span></label>
+          <input type="text" id="f-school" name="school" required maxlength="40" placeholder="예: 명지중학교" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="f-name"><span class="num">3.</span>이름<span class="req">*</span></label>
+          <input type="text" id="f-name" name="name" required maxlength="20" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="f-companions"><span class="num">4.</span>동행 인원<span class="req">*</span></label>
+          <input type="number" id="f-companions" name="companions" required min="0" max="20" step="1" value="0" inputmode="numeric">
+          <span class="hint">본인을 뺀 인원입니다. 혼자 오시면 0</span>
+        </div>
+        <div class="field">
+          <label for="f-phone"><span class="num">5.</span>휴대폰 번호<span class="req">*</span></label>
+          <input type="tel" id="f-phone" name="phone" required maxlength="13" placeholder="01012345678" inputmode="numeric" autocomplete="tel">
+          <span class="hint">숫자만 입력해 주세요</span>
+        </div>
+        <div class="field">
+          <label for="f-email"><span class="num">6.</span>이메일<span class="req">*</span></label>
+          <input type="email" id="f-email" name="email" required maxlength="80" autocomplete="email">
+        </div>
+
+        <fieldset class="field full" id="f-lessons">
+          <legend><span class="num">7.</span>참관 희망 수업<span class="req">*</span> <span class="hint">(복수 선택 가능 · 같은 교시는 한 수업만)</span></legend>
+          <div class="picks" id="lesson-picks"></div>
+        </fieldset>
+
+        <div class="field full">
+          <span class="field-label" style="font-weight:700"><span class="num">8.</span>개인정보 수집·이용 동의<span class="req">*</span></span>
+          <div class="consent">
+            <dl>
+              <dt>수집 항목</dt><dd>성명, 소속 지원청, 소속 학교, 연락처(휴대폰 번호, 이메일)</dd>
+              <dt>수집 목적</dt><dd>수업공개 참관 신청 접수 및 확인, 신청 정보 변경·취소 연락, 당일 안내</dd>
+              <dt>보유 기간</dt><dd>2026년 12월 31일까지 보유 후 지체 없이 파기</dd>
+            </dl>
+            <p>동의를 거부할 수 있으나, 거부 시 참관 신청 접수가 어렵습니다. (「개인정보 보호법」 제15조)</p>
+            <label><input type="checkbox" id="f-agree" name="agree" required> 개인정보 수집·이용에 동의합니다.</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 자동 입력 방지용 (사람에게는 보이지 않음) -->
+      <div class="hp" aria-hidden="true"><label>홈페이지<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <div class="form-foot">
+        <button type="submit" class="btn primary">참관 신청하기 →</button>
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <div>
       <div class="card panel">
         <span class="status">당일 안내</span>
         <h3>참관록</h3>
@@ -709,6 +820,90 @@
   }).join('');
   svg += `<rect x="70" y="97" width="788" height="1175" fill="none" stroke="#2b2620" stroke-width="2.5"/>`;
   document.getElementById('floor-svg').innerHTML = svg;
+
+  // ===== 참관 신청 =====
+  // Google Apps Script 웹 앱 주소 (apps-script/Code.gs 배포 후 받은 /exec 주소를 넣으세요)
+  const APPLY_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxeE7EJqY-SMXEgfYxcAYb42PbgQo-JRutkx2pBIBpGBQ3zSdJPxEremoZ9O12er3A/exec';
+
+  const PICKS = [
+    ...LESSONS.map(l => ({ id: l.id, period: l.period, color: l.color, label: `${l.subject} ${l.period}`, time: l.time, room: l.room })),
+    { id: 'share', period: '7교시', color: 'var(--c-share)', label: 'AI교무실 사례 나눔 7교시', time: '15:15~16:00', room: '글담도서관' }
+  ];
+  document.getElementById('lesson-picks').innerHTML = PICKS.map(p => `
+    <label class="pick" style="--c: ${p.color}">
+      <input type="checkbox" name="lessons" value="${p.id}" data-period="${p.period}">
+      <div><b>${esc(p.label)}</b><span>${esc(p.time)} · ${esc(p.room)}</span></div>
+    </label>`).join('');
+
+  const form = document.getElementById('apply-form');
+  const msg = document.getElementById('form-msg');
+
+  // 같은 교시 수업은 동시에 열리므로 하나만 고를 수 있게 함
+  form.addEventListener('change', e => {
+    const t = e.target;
+    if (t.name !== 'lessons' || !t.checked) return;
+    form.querySelectorAll(`input[name=lessons][data-period="${t.dataset.period}"]`).forEach(x => { if (x !== t) x.checked = false; });
+  });
+
+  // 휴대폰 번호는 숫자만 남김 (010-1234-5678 → 01012345678)
+  const phoneInput = document.getElementById('f-phone');
+  phoneInput.addEventListener('input', () => { phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 11); });
+
+  const showMsg = (text, error) => { msg.textContent = text; msg.className = 'form-msg' + (error ? ' error' : ''); };
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+    const v = id => document.getElementById(id).value.trim();
+    const data = {
+      office: v('f-office'),
+      school: v('f-school'),
+      name: v('f-name'),
+      companions: v('f-companions'),
+      phone: v('f-phone').replace(/\D/g, ''),
+      email: v('f-email'),
+      lessons: [...form.querySelectorAll('input[name=lessons]:checked')].map(x => x.value),
+      agree: document.getElementById('f-agree').checked,
+      website: form.website.value
+    };
+
+    const fail = (id, text) => {
+      const el = document.getElementById(id);
+      el.setAttribute('aria-invalid', 'true');
+      (el.matches('input, select') ? el : el.querySelector('input')).focus();
+      showMsg(text, true);
+    };
+    if (!data.office) return fail('f-office', '지원청을 선택해 주세요.');
+    if (!data.school) return fail('f-school', '학교를 입력해 주세요.');
+    if (!data.name) return fail('f-name', '이름을 입력해 주세요.');
+    if (!/^\d{1,2}$/.test(data.companions) || +data.companions > 20) return fail('f-companions', '동행 인원을 숫자로 입력해 주세요. (혼자 오시면 0)');
+    if (!/^01[016789]\d{7,8}$/.test(data.phone)) return fail('f-phone', '휴대폰 번호를 01012345678 형식으로 입력해 주세요.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return fail('f-email', '이메일 주소를 확인해 주세요.');
+    if (!data.lessons.length) return fail('f-lessons', '참관 희망 수업을 하나 이상 골라 주세요.');
+    if (!data.agree) return fail('f-agree', '개인정보 수집·이용에 동의해 주셔야 신청할 수 있습니다.');
+
+    if (!APPLY_ENDPOINT) return showMsg('신청 접수 준비 중입니다. 잠시 후 다시 시도해 주세요.', true);
+
+    const btn = form.querySelector('button[type=submit]');
+    btn.disabled = true;
+    showMsg('신청서를 보내는 중입니다…');
+    try {
+      // text/plain으로 보내야 Apps Script가 CORS 사전 요청 없이 받음
+      const res = await fetch(APPLY_ENDPOINT, { method: 'POST', body: JSON.stringify(data) });
+      const out = await res.json();
+      if (!out.ok) { btn.disabled = false; return showMsg(out.message || '접수하지 못했습니다. 다시 시도해 주세요.', true); }
+      const picked = PICKS.filter(p => data.lessons.includes(p.id)).map(p => p.label).join(', ');
+      form.innerHTML = `<div class="form-done">
+        <span class="status">신청 완료</span>
+        <h3>${esc(data.name)} 선생님, 참관 신청이 접수되었습니다.</h3>
+        <p>${esc(picked)}</p>
+        <p>변경·취소는 seulsamo1@naver.com으로 연락해 주세요.</p>
+      </div>`;
+    } catch (err) {
+      btn.disabled = false;
+      showMsg('전송 중 문제가 생겼습니다. 잠시 후 다시 시도하시거나 메일로 문의해 주세요.', true);
+    }
+  });
 </script>
 </body>
 </html>
