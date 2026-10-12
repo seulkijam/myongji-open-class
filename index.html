@@ -214,16 +214,26 @@
   .bus.blue { background: #3d6fb6; }
   .maplinks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
   .maplinks .btn { padding: 10px 16px; font-size: 14px; }
-  .floor {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: 320px; padding: 24px; text-align: center; color: var(--ink-3);
-    background:
-      repeating-linear-gradient(45deg, transparent 0 14px, rgba(160, 113, 74, .05) 14px 15px),
-      var(--card);
+  .spots { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; }
+  .spots li { display: grid; grid-template-columns: 28px 52px 1fr; gap: 10px; align-items: center; font-size: 15px; }
+  .spots .n {
+    display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 800; font-size: 13px;
   }
-  .floor img { width: 100%; height: auto; border-radius: 12px; }
-  .floor svg { width: 48px; height: 48px; color: var(--accent-2); margin-bottom: 10px; }
-  .places { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; }
+  .spots .fl { font-weight: 800; color: var(--accent); }
+  .spots .what { color: var(--ink-3); font-size: 13.5px; display: block; }
+
+  .floormap { margin-top: 20px; padding: 28px; }
+  .floormap-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .floormap-head h3 { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .floormap-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; }
+  #floor-svg { display: block; width: 100%; min-width: 680px; height: auto; font-family: inherit; }
+  #floor-svg text { font-family: "Pretendard", sans-serif; }
+  .floormap-note { display: none; margin: 10px 0 0; font-size: 13px; color: var(--ink-3); }
+  @media (max-width: 720px) { .floormap-note { display: block; } .floormap { padding: 18px; } }
 
   /* ---------- 참관 안내 ---------- */
   .guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
@@ -466,20 +476,31 @@
         </div>
       </div>
 
-      <div class="card floor" id="floor">
-        <!-- TODO: 배치도 이미지를 images/floor.webp 로 넣으면 아래 placeholder 대신 보입니다 -->
-        <img src="images/floor.webp" alt="명지중학교 교내 배치도" onerror="this.remove(); document.getElementById('floor-ph').hidden = false;">
-        <div id="floor-ph" hidden>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>
-          <div style="font-weight:700;color:var(--ink-2)">교내 배치도 준비 중</div>
-          <div style="font-size:14px">공개 장소</div>
-          <div class="places">
-            <span class="tool">2학년 8반</span><span class="tool">2학년 7반</span>
-            <span class="tool">정보교과실</span><span class="tool">1학년 5반</span>
-            <span class="tool">아가페실</span><span class="tool">글담도서관</span>
-          </div>
+      <div class="card addr">
+        <span class="status">행사 장소</span>
+        <div class="big">현관·로비는 2층에 있습니다</div>
+        <div style="color:var(--ink-2)">현관으로 들어오시면 글담도서관과 아가페실이 같은 층에 있습니다.</div>
+        <ol class="spots" id="spot-list"></ol>
+        <div class="maplinks">
+          <a class="btn ghost" href="#floormap">교내 배치도 보기 ↓</a>
         </div>
       </div>
+    </div>
+
+    <div class="card floormap" id="floormap">
+      <div class="floormap-head">
+        <h3>교내 배치도</h3>
+        <div class="legend">
+          <span><i style="background:var(--accent)"></i>행사 장소</span>
+          <span><i style="background:#ece3d3"></i>교실</span>
+          <span><i style="background:#f3dcc2"></i>화장실</span>
+          <span><i style="background:#fffcf6;border:1px solid var(--line)"></i>계단·EV</span>
+        </div>
+      </div>
+      <div class="floormap-scroll">
+        <svg id="floor-svg" viewBox="60 90 805 1190" role="img" aria-label="명지중학교 교내 배치도. 6층 정보교과실, 4층 2학년 7반과 8반, 3층 1학년 5반, 2층 아가페실과 글담도서관에서 행사가 열립니다."></svg>
+      </div>
+      <p class="floormap-note">휴대폰에서는 배치도를 좌우로 밀어서 보실 수 있습니다.</p>
     </div>
   </div>
 </section>
@@ -639,6 +660,113 @@
       <h4>참관 관찰 포인트</h4>${points}
     </article>`;
   }).join('');
+
+  // ===== 교내 배치도 =====
+  // 2026학년도 2학기 교과교실 배치도를 바탕으로 다시 그림(교사 이름은 넣지 않음).
+  // 좌표는 [x, y, 너비, 높이], 이름의 \n은 줄바꿈.
+  const SPOTS = [
+    { n: 1, floor: '6층', room: '정보교과실', what: '5교시 정보' },
+    { n: 2, floor: '4층', room: '2학년 8반', what: '5교시 기술' },
+    { n: 3, floor: '4층', room: '2학년 7반', what: '5교시 영어' },
+    { n: 4, floor: '3층', room: '1학년 5반', what: '6교시 수학' },
+    { n: 5, floor: '2층', room: '아가페실', what: '6교시 종교' },
+    { n: 6, floor: '2층', room: '글담도서관', what: '쉬는 시간 휴게실 · 사례 나눔' }
+  ];
+  const FLOORS = [['6층', 97, 243], ['5층', 243, 405], ['4층', 405, 617], ['3층', 617, 822], ['2층', 822, 1070], ['1층', 1070, 1272]];
+  const ROOMS = [
+    // 6층
+    ['admin', 163, 97, 135, 146, '마루마당'],
+    ['stair', 298, 97, 54, 70, '계단'], ['stair', 352, 97, 53, 70, 'EV'],
+    ['wc', 405, 97, 53, 35, '남화장실'], ['wc', 405, 132, 53, 35, '장애인\n화장실'],
+    ['cls', 458, 97, 80, 70, '교사\n휴게실'], ['cls', 538, 97, 80, 70, '교사\n휴게실'],
+    ['wc', 618, 97, 53, 35, '여화장실'], ['wc', 618, 132, 53, 35, '장애인\n화장실'],
+    ['stair', 671, 97, 54, 70, '계단'],
+    ['special', 725, 97, 133, 70, '위클래스'],
+    ['admin', 298, 185, 53, 58, '방송실'], ['office', 351, 185, 54, 58, '정보\n교육부'],
+    ['cls', 405, 185, 160, 58, '음악실1'], ['cls', 565, 185, 160, 58, '음악실2'],
+    ['event', 725, 185, 133, 58, '정보교과실', 1],
+    // 5층
+    ['cls', 163, 243, 108, 50, '3-2'], ['cls', 163, 293, 108, 55, '3-3'], ['special', 163, 348, 108, 57, '진로교육부'],
+    ['cls', 298, 243, 107, 50, '3-1'], ['stair', 298, 293, 54, 40, '계단'], ['stair', 352, 293, 53, 40, 'EV'],
+    ['wc', 405, 243, 48, 90, '남\n화\n장\n실'], ['dress', 453, 243, 120, 32, '탈의실'], ['wc', 573, 243, 45, 90, '여\n화\n장\n실'],
+    ['cls', 618, 243, 107, 50, '3-10'], ['stair', 618, 293, 53, 40, '창고'], ['stair', 671, 293, 54, 40, '계단'],
+    ['cls', 755, 243, 103, 50, '3-9'], ['cls', 755, 293, 103, 55, '3-8'], ['cls', 755, 348, 103, 57, '3-7'],
+    ['cls', 298, 348, 107, 57, '3-4'], ['cls', 405, 348, 107, 57, '3-5'],
+    ['office', 512, 348, 106, 57, '3학년\n교과연구실'], ['cls', 618, 348, 107, 57, '3-6'],
+    // 4층
+    ['office', 163, 405, 108, 102, '교무부·연구부\n학습지원부\n2학년 교과연구실'],
+    ['cls', 163, 507, 108, 58, '2-1'], ['cls', 163, 565, 108, 52, '2-2'],
+    ['cls', 298, 405, 107, 102, '종합교과실'],
+    ['stair', 298, 507, 54, 40, '계단'], ['stair', 352, 507, 53, 40, 'EV'],
+    ['wc', 405, 450, 48, 97, '남\n화\n장\n실'], ['dress', 453, 450, 120, 32, '탈의실'], ['wc', 573, 450, 45, 97, '여\n화\n장\n실'],
+    ['cls', 618, 450, 107, 57, '2-10'], ['stair', 618, 507, 53, 40, '창고'], ['stair', 671, 507, 54, 40, '계단'],
+    ['cls', 755, 450, 103, 57, '2-9'], ['event', 755, 507, 103, 58, '2-8', 2], ['event', 755, 565, 103, 52, '2-7', 3],
+    ['cls', 298, 565, 107, 52, '2-3'], ['cls', 405, 565, 107, 52, '2-4'], ['cls', 512, 565, 106, 52, '2-5'], ['cls', 618, 565, 107, 52, '2-6'],
+    // 3층
+    ['cls', 163, 617, 108, 50, '1-3'], ['cls', 163, 667, 108, 48, '1-4'], ['office', 163, 715, 108, 40, '생활안전부\n상담복지부'],
+    ['cls', 298, 617, 107, 50, '1-2'], ['cls', 298, 667, 107, 48, '1-1'],
+    ['stair', 298, 715, 54, 40, '계단'], ['stair', 352, 715, 53, 40, 'EV'],
+    ['wc', 405, 667, 48, 88, '남\n화\n장\n실'], ['wc', 573, 667, 45, 88, '여\n화\n장\n실'],
+    ['cls', 618, 667, 107, 48, '1-10'], ['stair', 618, 715, 53, 40, '창고'], ['stair', 671, 715, 54, 40, '계단'],
+    ['cls', 755, 667, 103, 48, '1-9'], ['cls', 755, 715, 103, 52, '1-8'], ['cls', 755, 767, 103, 55, '1-7'],
+    ['office', 163, 770, 108, 52, '1학년 교과연구실\n문화교육부'],
+    ['event', 298, 770, 107, 52, '1-5', 4], ['dress', 405, 770, 48, 52, '탈의실'],
+    ['dress', 573, 770, 45, 52, '탈의\n실'], ['cls', 618, 770, 107, 52, '1-6'],
+    // 2층
+    ['special', 163, 822, 108, 60, '온새미로실'], ['office', 163, 882, 108, 35, '체육실'],
+    ['admin', 163, 917, 108, 62, '행정실'], ['admin', 163, 979, 108, 40, '교장실'], ['admin', 163, 1019, 108, 51, '회의실'],
+    ['admin', 298, 822, 107, 28, '봉사센터'], ['office', 298, 850, 107, 32, '교목실/인성교육부'],
+    ['event', 298, 882, 107, 55, '아가페실', 5],
+    ['wc', 405, 882, 48, 55, '화장실'], ['wc', 573, 882, 45, 55, '화장실'],
+    ['stair', 298, 937, 54, 40, '계단'], ['stair', 352, 937, 53, 40, 'EV'],
+    ['entry', 405, 975, 48, 95, '현관\n·\n로비'], ['entry', 573, 975, 45, 95, '현관'],
+    ['wc', 298, 1003, 53, 30, '화장실'], ['wc', 351, 1003, 54, 30, '화장실'], ['stair', 298, 1033, 107, 37, '창고'],
+    ['stair', 618, 937, 53, 40, '창고'], ['stair', 671, 937, 54, 40, '계단'],
+    ['event', 725, 882, 133, 188, '글담도서관', 6],
+    // 1층
+    ['cls', 163, 1092, 108, 52, '과학실1'], ['cls', 163, 1144, 108, 72, '미술실1'], ['special', 163, 1216, 135, 56, '보건실'],
+    ['cls', 298, 1092, 107, 52, '과학실2'], ['stair', 298, 1144, 54, 47, '계단'], ['stair', 352, 1144, 53, 47, 'EV'],
+    ['cls', 405, 1092, 48, 52, '동아\n리실'], ['wc', 405, 1144, 48, 47, '남화\n장실'],
+    ['cls', 453, 1092, 120, 99, '체육교과실4'],
+    ['cls', 573, 1092, 45, 52, '동아\n리실'], ['wc', 573, 1144, 45, 47, '여화\n장실'],
+    ['cls', 618, 1092, 107, 52, '미술실2'], ['stair', 618, 1144, 53, 47, '창고'], ['stair', 671, 1144, 54, 47, '계단'],
+    ['cls', 755, 1092, 103, 100, '체육교과실1'], ['cls', 755, 1192, 103, 80, '체육교과실2'],
+    ['cls', 298, 1216, 155, 56, '가사실'], ['cls', 453, 1216, 82, 56, '학생회실'],
+    ['cls', 535, 1216, 83, 56, '온담교실'], ['cls', 618, 1216, 137, 56, '체육교과실3']
+  ];
+  const FILL = {
+    cls: '#ece3d3', office: '#dfd3bd', special: '#ead5c3', wc: '#f3dcc2', dress: '#e2e3cc',
+    admin: '#d5c6a8', stair: '#fffcf6', entry: '#f6f1e8', event: '#a0714a'
+  };
+
+  document.getElementById('spot-list').innerHTML = SPOTS.map(s =>
+    `<li><span class="n">${s.n}</span><span class="fl">${s.floor}</span><span><b>${esc(s.room)}</b><span class="what">${esc(s.what)}</span></span></li>`
+  ).join('');
+
+  const svgText = (x, y, w, h, label, opts = {}) => {
+    const lines = label.split('\n');
+    const size = opts.size || (lines.length > 2 || w < 60 ? 11 : 13);
+    const lh = size * 1.25;
+    const y0 = y + h / 2 - (lines.length - 1) * lh / 2;
+    return `<text x="${x + w / 2}" text-anchor="middle" dominant-baseline="central" font-size="${size}" font-weight="${opts.weight || 500}" fill="${opts.fill || '#5e554a'}">` +
+      lines.map((t, i) => `<tspan x="${x + w / 2}" y="${y0 + i * lh}">${esc(t)}</tspan>`).join('') + `</text>`;
+  };
+
+  let svg = `<rect x="155" y="97" width="703" height="1175" fill="#f6f1e8"/>`;
+  svg += FLOORS.map(([name, y1, y2]) =>
+    `<rect x="70" y="${y1}" width="85" height="${y2 - y1}" fill="#e6dcc6" stroke="#fffcf6" stroke-width="2"/>` +
+    svgText(70, y1, 85, y2 - y1, name, { size: 18, weight: 800, fill: '#2b2620' }) +
+    `<line x1="70" x2="858" y1="${y2}" y2="${y2}" stroke="#c9b9a0" stroke-width="2"/>`
+  ).join('');
+  svg += ROOMS.map(([type, x, y, w, h, label, n]) => {
+    const ev = type === 'event';
+    let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${FILL[type]}" stroke="#c9b9a0" stroke-width="1"/>`;
+    s += svgText(x, y, w, h, label, ev ? { size: 15, weight: 800, fill: '#fff' } : {});
+    if (n) s += `<circle cx="${x + 15}" cy="${y + 15}" r="11" fill="#fff"/><text x="${x + 15}" y="${y + 15}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="800" fill="#a0714a">${n}</text>`;
+    return s;
+  }).join('');
+  svg += `<rect x="70" y="97" width="788" height="1175" fill="none" stroke="#2b2620" stroke-width="2.5"/>`;
+  document.getElementById('floor-svg').innerHTML = svg;
 </script>
 </body>
 </html>
