@@ -172,13 +172,6 @@
     padding: 5px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 600;
     background: var(--accent-soft); color: var(--ink);
   }
-  .lesson h4 { font-size: 15px; margin: 22px 0 8px; display: flex; align-items: center; gap: 8px; }
-  .lesson h4::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--accent)); }
-  .lesson ul.points { margin: 0; padding-left: 20px; color: var(--ink-2); }
-  .flow { display: grid; gap: 8px; }
-  .flow-row { display: grid; grid-template-columns: 80px 56px 1fr; gap: 12px; align-items: baseline; font-size: 15px; }
-  .flow-row b { font-weight: 700; }
-  .flow-row span { color: var(--ink-3); font-variant-numeric: tabular-nums; }
   .tbd {
     padding: 14px 16px; border-radius: 12px; background: var(--bg);
     color: var(--ink-3); font-size: 14px; border: 1px dashed var(--line);
@@ -218,16 +211,28 @@
   .buses { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .bus { padding: 2px 9px; border-radius: 6px; font-size: 13px; font-weight: 700; background: #6b8e4e; color: #fff; }
   .bus.blue { background: #3d6fb6; }
-  .maplinks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-  .maplinks .btn { padding: 10px 16px; font-size: 14px; }
-  .spots { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; }
-  .spots li { display: grid; grid-template-columns: 28px 52px 1fr; gap: 10px; align-items: center; font-size: 15px; }
+  .map { padding: 0; overflow: hidden; min-height: 360px; }
+  .map iframe { display: block; width: 100%; height: 100%; min-height: 360px; border: 0; }
+  .venue { margin-top: 20px; padding: 28px; }
+  .venue .big { font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 4px; }
+  .spots {
+    list-style: none; margin: 20px 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;
+  }
+  .spots a {
+    display: block; height: 100%; padding: 14px 16px; border-radius: 12px; text-decoration: none;
+    background: var(--bg); border: 1px solid var(--line); transition: transform .15s, border-color .15s;
+  }
+  .spots a:hover { transform: translateY(-2px); border-color: var(--accent-2); }
   .spots .n {
-    display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    display: inline-block; padding: 1px 9px; border-radius: 999px; margin-right: 6px;
     background: var(--accent); color: #fff; font-weight: 800; font-size: 13px;
   }
-  .spots .fl { font-weight: 800; color: var(--accent); }
+  .spots .fl { font-weight: 800; color: var(--accent); font-size: 14px; }
+  .spots b { display: block; margin-top: 8px; font-size: 15px; }
   .spots .what { color: var(--ink-3); font-size: 13.5px; display: block; }
+  #floor-svg a { cursor: pointer; }
+  #floor-svg a:hover rect.ev { fill: #8a5f3c; }
 
   .floormap { margin-top: 20px; padding: 28px; }
   .floormap-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
@@ -240,19 +245,6 @@
   #floor-svg text { font-family: "Pretendard", sans-serif; }
   .floormap-note { display: none; margin: 10px 0 0; font-size: 13px; color: var(--ink-3); }
   @media (max-width: 720px) { .floormap-note { display: block; } .floormap { padding: 18px; } }
-
-  /* ---------- 참관 안내 ---------- */
-  .guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-  .guide .item { padding: 24px; }
-  .guide .num {
-    display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
-    background: var(--accent-soft); color: var(--accent); font-weight: 800; margin-bottom: 14px;
-  }
-  .guide h3 { margin: 0 0 6px; font-size: 17px; }
-  .guide p { margin: 0; color: var(--ink-2); font-size: 15px; }
-  .rules { margin-top: 20px; padding: 24px 28px; }
-  .rules h3 { margin: 0 0 10px; font-size: 17px; }
-  .rules ul { margin: 0; padding-left: 20px; color: var(--ink-2); display: grid; gap: 4px; }
 
   /* ---------- 푸터 ---------- */
   footer { padding: 56px 0 64px; border-top: 1px solid var(--line); }
@@ -277,8 +269,7 @@
   }
   @media (max-width: 480px) {
     .wrap { padding: 0 16px; }
-    .lesson, .panel, .route .addr, .share .main, .share .app { padding: 22px; }
-    .flow-row { grid-template-columns: 64px 48px 1fr; gap: 8px; }
+    .lesson, .panel, .route .addr, .venue, .share .main, .share .app { padding: 22px; }
   }
 </style>
 </head>
@@ -288,12 +279,11 @@
   <div class="wrap">
     <a class="logo" href="#top"><img src="images/logo.png" alt="" width="30" height="30">명지중 <span>수업 나눔</span></a>
     <ul>
-      <li><a href="#schedule">시간표</a></li>
+      <li><a href="#schedule">일정</a></li>
       <li><a href="#lessons">공개 수업</a></li>
       <li><a href="#share">사례 나눔</a></li>
       <li><a href="#apply">참관 신청</a></li>
       <li><a href="#route">오시는 길</a></li>
-      <li><a href="#guide">참관 안내</a></li>
       <li><a href="#contact">문의</a></li>
     </ul>
   </div>
@@ -325,7 +315,7 @@
       </div>
       <div class="btns">
         <a class="btn primary" href="#apply">참관 신청하기 →</a>
-        <a class="btn ghost" href="#schedule">시간표 보기</a>
+        <a class="btn ghost" href="#schedule">일정 보기</a>
       </div>
     </div>
 
@@ -356,12 +346,12 @@
   </div>
 </header>
 
-<!-- 시간표 -->
+<!-- 수업 나눔 일정 -->
 <section class="block alt" id="schedule">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Program</span>
-      <h2>행사 시간표</h2>
+      <h2>수업 나눔 일정</h2>
       <p>5교시와 6교시에는 수업이 동시에 열립니다. 교시마다 한 수업을 골라 참관해 주세요.</p>
     </div>
     <div class="timeline" id="timeline"></div>
@@ -374,7 +364,7 @@
     <div class="sec-head">
       <span class="eyebrow">Open Classes</span>
       <h2>공개 수업 소개</h2>
-      <p>수업마다 활용한 AI·디지털 도구와 참관 포인트를 미리 살펴보세요.</p>
+      <p>수업마다 활용한 AI·디지털 도구를 미리 살펴보세요.</p>
     </div>
     <div class="lessons" id="lesson-list"></div>
   </div>
@@ -391,12 +381,12 @@
     <div class="share">
       <article class="card main">
         <div class="lesson-head">
-          <span class="badge" style="--c: var(--c-share)">사례 나눔</span>
-          <span class="when">15:10 ~ 16:00 · 글담도서관</span>
+          <span class="badge" style="--c: var(--c-share)">7. 사례 나눔</span>
+          <span class="when">7교시 · 15:15 ~ 16:00 · 글담도서관</span>
         </div>
         <h3 style="margin:0 0 10px;font-size:23px;letter-spacing:-.025em;line-height:1.45">바이브코딩을 통한 AI교무실 조성 및<br>업무 자동화 사례 나눔</h3>
         <p style="color:var(--ink-2);margin:0 0 18px">코딩 전문가가 아닌 교사가 AI와 대화하며 만든 웹앱으로 교무실 업무를 어떻게 바꾸었는지, 만드는 과정과 실제 활용 사례를 소개합니다.</p>
-        <div class="tbd">발표자·세부 순서는 추후 안내드립니다.</div>
+        <div class="tbd">담당: 명지중학교 정보교육부</div>
       </article>
       <aside class="card app">
         <div>
@@ -425,7 +415,7 @@
         <p>신청서 양식과 신청 기간은 곧 안내드립니다.</p>
         <ul>
           <li>5교시·6교시 중 참관할 수업 선택</li>
-          <li>사례 나눔(15:10) 참석 여부</li>
+          <li>7교시 사례 나눔(15:15) 참석 여부</li>
         </ul>
         <!-- TODO: 신청 폼 주소가 정해지면 href를 바꾸고 disabled 클래스를 지우세요 -->
         <a class="btn primary disabled" href="#" target="_blank" rel="noopener">신청서 작성하기 →</a>
@@ -479,21 +469,18 @@
             <dd>교내 주차 공간이 협소합니다. 대중교통 이용을 부탁드립니다.</dd>
           </div>
         </dl>
-        <div class="maplinks">
-          <a class="btn ghost" href="https://map.naver.com/p/search/%EB%AA%85%EC%A7%80%EC%A4%91%ED%95%99%EA%B5%90%20%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC" target="_blank" rel="noopener">네이버 지도</a>
-          <a class="btn ghost" href="https://map.kakao.com/?q=%EC%84%9C%EC%9A%B8%20%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC%20%EB%AA%85%EC%A7%802%EA%B8%B8%2056" target="_blank" rel="noopener">카카오맵</a>
-        </div>
       </div>
 
-      <div class="card addr">
-        <span class="status">행사 장소</span>
-        <div class="big">현관·로비는 2층에 있습니다</div>
-        <div style="color:var(--ink-2)">현관으로 들어오시면 글담도서관과 아가페실이 같은 층에 있습니다.</div>
-        <ol class="spots" id="spot-list"></ol>
-        <div class="maplinks">
-          <a class="btn ghost" href="#floormap">교내 배치도 보기 ↓</a>
-        </div>
+      <div class="card map">
+        <iframe src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC%20%EB%AA%85%EC%A7%802%EA%B8%B8%2056%20%EB%AA%85%EC%A7%80%EC%A4%91%ED%95%99%EA%B5%90&hl=ko&z=16&output=embed" title="명지중학교 위치 지도" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
+    </div>
+
+    <div class="card venue">
+      <span class="status">행사 장소</span>
+      <div class="big">현관·로비는 2층에 있습니다</div>
+      <div style="color:var(--ink-2)">현관으로 들어오시면 글담도서관과 아가페실이 같은 층에 있습니다. 장소를 누르면 해당 수업 소개로 이동합니다.</div>
+      <ol class="spots" id="spot-list"></ol>
     </div>
 
     <div class="card floormap" id="floormap">
@@ -510,48 +497,6 @@
         <svg id="floor-svg" viewBox="60 90 805 1190" role="img" aria-label="명지중학교 교내 배치도. 6층 정보교과실, 4층 2학년 7반과 8반, 3층 1학년 5반, 2층 아가페실과 글담도서관에서 행사가 열립니다."></svg>
       </div>
       <p class="floormap-note">휴대폰에서는 배치도를 좌우로 밀어서 보실 수 있습니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 참관 안내 -->
-<section class="block" id="guide">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow">Guide</span>
-      <h2>참관 안내</h2>
-      <p>당일 이렇게 움직이시면 됩니다.</p>
-    </div>
-    <div class="guide">
-      <div class="card item">
-        <div class="num">1</div>
-        <h3>5교시 입실</h3>
-        <p>13:25 수업 시작 5분 전까지 신청한 교실로 입실해 주세요.</p>
-      </div>
-      <div class="card item">
-        <div class="num">2</div>
-        <h3>쉬는 시간 · 이동</h3>
-        <p>수업 사이 쉬는 시간에는 <b>글담도서관</b>을 휴게실로 운영합니다. 6교시 교실로 이동하기 전 잠시 쉬어 가세요.</p>
-      </div>
-      <div class="card item">
-        <div class="num">3</div>
-        <h3>6교시 참관</h3>
-        <p>14:20부터 1학년 5반 또는 아가페실에서 수업이 진행됩니다.</p>
-      </div>
-      <div class="card item">
-        <div class="num">4</div>
-        <h3>사례 나눔 · 참관록</h3>
-        <p>15:10 글담도서관에서 사례 나눔에 참여하시고, 참관록을 남겨 주세요.</p>
-      </div>
-    </div>
-    <div class="card rules">
-      <h3>참관하실 때 부탁드립니다</h3>
-      <ul>
-        <li>휴대전화는 무음으로 설정해 주세요.</li>
-        <li>학생 얼굴이 나오는 사진·영상 촬영은 삼가 주세요.</li>
-        <li>교실 뒤쪽이나 모둠 옆에서 조용히 관찰해 주시고, 학생에게 정답을 알려 주지 말아 주세요.</li>
-        <li>학생 기기와 충전 케이블이 바닥에 있을 수 있으니 이동 시 주의해 주세요.</li>
-      </ul>
     </div>
   </div>
 </section>
@@ -573,54 +518,48 @@
   // 비어 있는 값('')이나 빈 배열은 화면에 "추후 안내"로 표시됩니다.
   const LESSONS = [
     {
-      id: 'tech', color: 'var(--c-tech)', subject: '기술', period: '5교시', time: '13:25~14:10',
-      room: '2학년 8반', target: '2학년 8반', teacher: '',
-      title: '생성형 AI를 활용한 UDL 기반 협동학습 수업 설계',
-      unit: "'친환경 에너지의 활용' 단원",
-      tools: ['생성형 AI', 'UDL(보편적 학습 설계)', '협동학습'],
-      overview: '', flow: [], points: []
-    },
-    {
-      id: 'info', color: 'var(--c-info)', subject: '정보', period: '5교시', time: '13:25~14:10',
-      room: '정보교과실', target: '1학년', teacher: '',
+      id: 'info', no: '5-1', color: 'var(--c-info)', subject: '정보', period: '5교시', time: '13:25~14:10',
+      room: '정보교과실', target: '1학년', teacher: '조*택',
       title: '“AI가 쓴 글 구별할 수 있을까?”',
       unit: '바이브코딩으로 구축한 수업 사이트 활용',
-      tools: ['바이브코딩 수업 사이트'],
-      overview: '', flow: [], points: []
+      tools: ['바이브코딩 수업 사이트']
     },
     {
-      id: 'eng', color: 'var(--c-eng)', subject: '영어', period: '5교시', time: '13:25~14:10',
-      room: '2학년 7반', target: '2학년 7반', teacher: '',
+      id: 'tech', no: '5-2', color: 'var(--c-tech)', subject: '기술', period: '5교시', time: '13:25~14:10',
+      room: '2학년 8반', target: '2학년 8반', teacher: '이*재',
+      title: '생성형 AI를 활용한 UDL 기반 협동학습 수업 설계',
+      unit: "'친환경 에너지의 활용' 단원",
+      tools: ['생성형 AI', 'UDL(보편적 학습 설계)', '협동학습']
+    },
+    {
+      id: 'eng', no: '5-3', color: 'var(--c-eng)', subject: '영어', period: '5교시', time: '13:25~14:10',
+      room: '2학년 7반', target: '2학년 7반', teacher: '유*린',
       title: 'Input enhancement를 활용한 target form 학습',
       unit: '바이브코딩으로 제작한 웹앱과 ZEP Quiz 활용',
-      tools: ['바이브코딩 웹앱', 'ZEP Quiz'],
-      overview: '', flow: [], points: []
+      tools: ['바이브코딩 웹앱', 'ZEP Quiz']
     },
     {
-      id: 'math', color: 'var(--c-math)', subject: '수학', period: '6교시', time: '14:20~15:05',
-      room: '1학년 5반', target: '1학년 5반', teacher: '',
+      id: 'math', no: '6-1', color: 'var(--c-math)', subject: '수학', period: '6교시', time: '14:20~15:05',
+      room: '1학년 5반', target: '1학년 5반', teacher: '이*준',
       title: '3D도형탐구교실을 통한 입체도형 학습',
       unit: '바이브코딩으로 제작한 웹앱과 Canva 활용',
-      tools: ['3D도형탐구교실(바이브코딩 웹앱)', 'Canva'],
-      overview: '', flow: [], points: []
+      tools: ['3D도형탐구교실(바이브코딩 웹앱)', 'Canva']
     },
     {
-      id: 'rel', color: 'var(--c-rel)', subject: '종교', period: '6교시', time: '14:20~15:05',
-      room: '아가페실', target: '1학년', teacher: '',
+      id: 'rel', no: '6-2', color: 'var(--c-rel)', subject: '종교', period: '6교시', time: '14:20~15:05',
+      room: '아가페실', target: '1학년', teacher: '이*열',
       title: 'AI와 함께 하는 사회정서교육',
       unit: '바이브코딩으로 제작한 웹앱 활용',
-      tools: ['바이브코딩 웹앱', '사회정서학습(SEL)'],
-      overview: '', flow: [], points: []
+      tools: ['바이브코딩 웹앱', '사회정서학습(SEL)']
     }
   ];
-  // flow 예시: [{ step: '도입', min: 5, desc: '...' }, ...]
 
   const SLOTS = [
-    { label: '5교시', time: '13:25 ~ 14:10', items: ['tech', 'info', 'eng'] },
+    { label: '5교시', time: '13:25 ~ 14:10', items: ['info', 'tech', 'eng'] },
     { break: true, time: '14:10 ~ 14:20', note: '쉬는 시간 · 휴게실 글담도서관 · 6교시 교실로 이동' },
     { label: '6교시', time: '14:20 ~ 15:05', items: ['math', 'rel'] },
-    { break: true, time: '15:05 ~ 15:10', note: '쉬는 시간 · 휴게실 글담도서관 · 사례 나눔 장소로 이동' },
-    { label: '사례 나눔', time: '15:10 ~ 16:00', share: true }
+    { break: true, time: '15:05 ~ 15:15', note: '쉬는 시간 · 휴게실 글담도서관 · 사례 나눔 장소로 이동' },
+    { label: '7교시', time: '15:15 ~ 16:00', share: true }
   ];
 
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -635,12 +574,12 @@
     }
     const items = s.share
       ? `<a class="card slot-item" href="#share" style="--c: var(--c-share)">
-           <div class="top"><span class="badge">사례 나눔</span><span class="room">글담도서관</span></div>
+           <div class="top"><span class="badge">7. 사례 나눔</span><span class="room">글담도서관</span></div>
            <p>바이브코딩을 통한 AI교무실 조성 및 업무 자동화 사례 나눔</p></a>`
       : s.items.map(id => {
           const l = LESSONS.find(x => x.id === id);
           return `<a class="card slot-item" href="#lesson-${l.id}" style="--c: ${l.color}">
-            <div class="top"><span class="badge">${esc(l.subject)}</span><span class="room">${esc(l.room)}</span></div>
+            <div class="top"><span class="badge">${esc(l.no)}. ${esc(l.subject)}</span><span class="room">${esc(l.room)}</span></div>
             <p>${esc(l.title)}</p></a>`;
         }).join('');
     return `<div class="slot"><div class="slot-time"><b>${esc(s.label)}</b><span>${esc(s.time)}</span></div>
@@ -650,23 +589,14 @@
   // 수업 카드
   document.getElementById('lesson-list').innerHTML = LESSONS.map(l => {
     const fact = (k, v) => `<div><dt>${k}</dt><dd>${esc(v || TBD)}</dd></div>`;
-    const flow = l.flow.length
-      ? `<div class="flow">${l.flow.map(f => `<div class="flow-row"><b>${esc(f.step)}</b><span>${esc(f.min)}분</span><div>${esc(f.desc)}</div></div>`).join('')}</div>`
-      : `<div class="tbd">수업 흐름은 추후 안내드립니다.</div>`;
-    const points = l.points.length
-      ? `<ul class="points">${l.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul>`
-      : `<div class="tbd">관찰 포인트는 추후 안내드립니다.</div>`;
     return `<article class="card lesson" id="lesson-${l.id}" style="--c: ${l.color}">
-      <div class="lesson-head"><span class="badge">${esc(l.subject)}</span><span class="when">${esc(l.period)} · ${esc(l.time)}</span></div>
+      <div class="lesson-head"><span class="badge">${esc(l.no)}. ${esc(l.subject)}</span><span class="when">${esc(l.period)} · ${esc(l.time)}</span></div>
       <h3>${esc(l.title)}</h3>
       <p class="unit">${esc(l.unit)}</p>
       <dl class="facts">
         ${fact('일시', `11. 3.(화) ${l.period}`)}${fact('장소', l.room)}${fact('대상', l.target)}${fact('수업자', l.teacher)}
       </dl>
-      <div class="tools">${l.tools.map(t => `<span class="tool">${esc(t)}</span>`).join('')}</div>
-      ${l.overview ? `<h4>수업 개요</h4><p style="margin:0;color:var(--ink-2)">${esc(l.overview)}</p>` : ''}
-      <h4>45분 수업 흐름</h4>${flow}
-      <h4>참관 관찰 포인트</h4>${points}
+      <div class="tools" style="margin:0">${l.tools.map(t => `<span class="tool">${esc(t)}</span>`).join('')}</div>
     </article>`;
   }).join('');
 
@@ -674,12 +604,12 @@
   // 2026학년도 2학기 교과교실 배치도를 바탕으로 다시 그림(교사 이름은 넣지 않음).
   // 좌표는 [x, y, 너비, 높이], 이름의 \n은 줄바꿈.
   const SPOTS = [
-    { n: 1, floor: '6층', room: '정보교과실', what: '5교시 정보' },
-    { n: 2, floor: '4층', room: '2학년 8반', what: '5교시 기술' },
-    { n: 3, floor: '4층', room: '2학년 7반', what: '5교시 영어' },
-    { n: 4, floor: '3층', room: '1학년 5반', what: '6교시 수학' },
-    { n: 5, floor: '2층', room: '아가페실', what: '6교시 종교' },
-    { n: 6, floor: '2층', room: '글담도서관', what: '쉬는 시간 휴게실 · 사례 나눔' }
+    { n: '5-1', floor: '6층', room: '정보교과실', what: '5교시 정보', href: '#lesson-info' },
+    { n: '5-2', floor: '4층', room: '2학년 8반', what: '5교시 기술', href: '#lesson-tech' },
+    { n: '5-3', floor: '4층', room: '2학년 7반', what: '5교시 영어', href: '#lesson-eng' },
+    { n: '6-1', floor: '3층', room: '1학년 5반', what: '6교시 수학', href: '#lesson-math' },
+    { n: '6-2', floor: '2층', room: '아가페실', what: '6교시 종교', href: '#lesson-rel' },
+    { n: '7', floor: '2층', room: '글담도서관', what: '7교시 사례 나눔 · 쉬는 시간 휴게실', href: '#share' }
   ];
   const FLOORS = [['6층', 97, 243], ['5층', 243, 405], ['4층', 405, 617], ['3층', 617, 822], ['2층', 822, 1070], ['1층', 1070, 1272]];
   const ROOMS = [
@@ -693,7 +623,7 @@
     ['special', 725, 97, 133, 70, '위클래스'],
     ['admin', 298, 185, 53, 58, '방송실'], ['office', 351, 185, 54, 58, '정보\n교육부'],
     ['cls', 405, 185, 160, 58, '음악실1'], ['cls', 565, 185, 160, 58, '음악실2'],
-    ['event', 725, 185, 133, 58, '정보교과실', 1],
+    ['event', 725, 185, 133, 58, '정보교과실', '5-1'],
     // 5층
     ['cls', 163, 243, 108, 50, '3-2'], ['cls', 163, 293, 108, 55, '3-3'], ['special', 163, 348, 108, 57, '진로교육부'],
     ['cls', 298, 243, 107, 50, '3-1'], ['stair', 298, 293, 54, 40, '계단'], ['stair', 352, 293, 53, 40, 'EV'],
@@ -709,7 +639,7 @@
     ['stair', 298, 507, 54, 40, '계단'], ['stair', 352, 507, 53, 40, 'EV'],
     ['wc', 405, 450, 48, 97, '남\n화\n장\n실'], ['dress', 453, 450, 120, 32, '탈의실'], ['wc', 573, 450, 45, 97, '여\n화\n장\n실'],
     ['cls', 618, 450, 107, 57, '2-10'], ['stair', 618, 507, 53, 40, '창고'], ['stair', 671, 507, 54, 40, '계단'],
-    ['cls', 755, 450, 103, 57, '2-9'], ['event', 755, 507, 103, 58, '2-8', 2], ['event', 755, 565, 103, 52, '2-7', 3],
+    ['cls', 755, 450, 103, 57, '2-9'], ['event', 755, 507, 103, 58, '2-8', '5-2'], ['event', 755, 565, 103, 52, '2-7', '5-3'],
     ['cls', 298, 565, 107, 52, '2-3'], ['cls', 405, 565, 107, 52, '2-4'], ['cls', 512, 565, 106, 52, '2-5'], ['cls', 618, 565, 107, 52, '2-6'],
     // 3층
     ['cls', 163, 617, 108, 50, '1-3'], ['cls', 163, 667, 108, 48, '1-4'], ['office', 163, 715, 108, 40, '생활안전부\n상담복지부'],
@@ -719,19 +649,19 @@
     ['cls', 618, 667, 107, 48, '1-10'], ['stair', 618, 715, 53, 40, '창고'], ['stair', 671, 715, 54, 40, '계단'],
     ['cls', 755, 667, 103, 48, '1-9'], ['cls', 755, 715, 103, 52, '1-8'], ['cls', 755, 767, 103, 55, '1-7'],
     ['office', 163, 770, 108, 52, '1학년 교과연구실\n문화교육부'],
-    ['event', 298, 770, 107, 52, '1-5', 4], ['dress', 405, 770, 48, 52, '탈의실'],
+    ['event', 298, 770, 107, 52, '1-5', '6-1'], ['dress', 405, 770, 48, 52, '탈의실'],
     ['dress', 573, 770, 45, 52, '탈의\n실'], ['cls', 618, 770, 107, 52, '1-6'],
     // 2층
     ['special', 163, 822, 108, 60, '온새미로실'], ['office', 163, 882, 108, 35, '체육실'],
     ['admin', 163, 917, 108, 62, '행정실'], ['admin', 163, 979, 108, 40, '교장실'], ['admin', 163, 1019, 108, 51, '회의실'],
     ['admin', 298, 822, 107, 28, '봉사센터'], ['office', 298, 850, 107, 32, '교목실/인성교육부'],
-    ['event', 298, 882, 107, 55, '아가페실', 5],
+    ['event', 298, 882, 107, 55, '아가페실', '6-2'],
     ['wc', 405, 882, 48, 55, '화장실'], ['wc', 573, 882, 45, 55, '화장실'],
     ['stair', 298, 937, 54, 40, '계단'], ['stair', 352, 937, 53, 40, 'EV'],
     ['entry', 405, 975, 48, 95, '현관\n·\n로비'], ['entry', 573, 975, 45, 95, '현관'],
     ['wc', 298, 1003, 53, 30, '화장실'], ['wc', 351, 1003, 54, 30, '화장실'], ['stair', 298, 1033, 107, 37, '창고'],
     ['stair', 618, 937, 53, 40, '창고'], ['stair', 671, 937, 54, 40, '계단'],
-    ['event', 725, 882, 133, 188, '글담도서관', 6],
+    ['event', 725, 882, 133, 188, '글담도서관', '7'],
     // 1층
     ['cls', 163, 1092, 108, 52, '과학실1'], ['cls', 163, 1144, 108, 72, '미술실1'], ['special', 163, 1216, 135, 56, '보건실'],
     ['cls', 298, 1092, 107, 52, '과학실2'], ['stair', 298, 1144, 54, 47, '계단'], ['stair', 352, 1144, 53, 47, 'EV'],
@@ -749,7 +679,7 @@
   };
 
   document.getElementById('spot-list').innerHTML = SPOTS.map(s =>
-    `<li><span class="n">${s.n}</span><span class="fl">${s.floor}</span><span><b>${esc(s.room)}</b><span class="what">${esc(s.what)}</span></span></li>`
+    `<li><a href="${s.href}"><span class="n">${esc(s.n)}</span><span class="fl">${s.floor}</span><b>${esc(s.room)}</b><span class="what">${esc(s.what)}</span></a></li>`
   ).join('');
 
   const svgText = (x, y, w, h, label, opts = {}) => {
@@ -769,10 +699,13 @@
   ).join('');
   svg += ROOMS.map(([type, x, y, w, h, label, n]) => {
     const ev = type === 'event';
-    let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${FILL[type]}" stroke="#c9b9a0" stroke-width="1"/>`;
+    let s = `<rect${ev ? ' class="ev"' : ''} x="${x}" y="${y}" width="${w}" height="${h}" fill="${FILL[type]}" stroke="#c9b9a0" stroke-width="1"/>`;
     s += svgText(x, y, w, h, label, ev ? { size: 15, weight: 800, fill: '#fff' } : {});
-    if (n) s += `<circle cx="${x + 15}" cy="${y + 15}" r="11" fill="#fff"/><text x="${x + 15}" y="${y + 15}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="800" fill="#a0714a">${n}</text>`;
-    return s;
+    if (!n) return s;
+    const pw = n.length > 1 ? 32 : 22;
+    s += `<rect x="${x + 4}" y="${y + 4}" width="${pw}" height="20" rx="10" fill="#fff"/><text x="${x + 4 + pw / 2}" y="${y + 14}" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="800" fill="#a0714a">${n}</text>`;
+    const spot = SPOTS.find(p => p.n === n);
+    return `<a href="${spot.href}"><title>${esc(spot.room)} · ${esc(spot.what)}</title>${s}</a>`;
   }).join('');
   svg += `<rect x="70" y="97" width="788" height="1175" fill="none" stroke="#2b2620" stroke-width="2.5"/>`;
   document.getElementById('floor-svg').innerHTML = svg;
