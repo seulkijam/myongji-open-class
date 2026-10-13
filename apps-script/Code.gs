@@ -19,11 +19,11 @@ const LESSONS = [
 
 const OFFICES = ['동부', '서부', '남부', '북부', '중부', '강남서초', '강동송파', '강서양천', '동작관악', '성동광진', '성북강북'];
 
-const HEADERS = ['신청 일시', '지원청', '학교', '이름', '동행 인원', '휴대폰 번호', '이메일', '참관 수업']
+const HEADERS = ['신청 일시', '지원청', '학교', '이름', '휴대폰 번호', '이메일', '참관 수업']
   .concat(LESSONS.map(l => l[1] + ' (인원)'))
   .concat(['개인정보 동의']);
 
-const PHONE_COL = 6; // '휴대폰 번호' 열 (A=1)
+const PHONE_COL = 5; // '휴대폰 번호' 열 (A=1)
 
 function doPost(e) {
   try {
@@ -36,26 +36,23 @@ function doPost(e) {
     const office = text(d.office, 10);
     const school = text(d.school, 40);
     const name = text(d.name, 20);
-    const companions = Number(d.companions);
     const phone = String(d.phone || '').replace(/\D/g, '');
     const email = text(d.email, 80);
     const picked = Array.isArray(d.lessons) ? d.lessons : [];
 
     if (OFFICES.indexOf(office) < 0) return json({ ok: false, message: '지원청을 선택해 주세요.' });
     if (!school || !name) return json({ ok: false, message: '학교와 이름을 입력해 주세요.' });
-    if (!Number.isInteger(companions) || companions < 0 || companions > 20) return json({ ok: false, message: '동행 인원을 확인해 주세요.' });
     if (!/^01[016789]\d{7,8}$/.test(phone)) return json({ ok: false, message: '휴대폰 번호를 확인해 주세요.' });
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ ok: false, message: '이메일 주소를 확인해 주세요.' });
     const chosen = LESSONS.filter(l => picked.indexOf(l[0]) >= 0);
     if (!chosen.length) return json({ ok: false, message: '참관 희망 수업을 골라 주세요.' });
     if (d.agree !== true) return json({ ok: false, message: '개인정보 수집·이용에 동의해 주세요.' });
 
-    const people = 1 + companions;
     const row = [
-      new Date(), office, school, name, companions, phone, email,
+      new Date(), office, school, name, phone, email,
       chosen.map(l => l[1]).join(', ')
     ]
-      .concat(LESSONS.map(l => (picked.indexOf(l[0]) >= 0 ? people : '')))
+      .concat(LESSONS.map(l => (picked.indexOf(l[0]) >= 0 ? 1 : '')))
       .concat(['동의']);
 
     const lock = LockService.getScriptLock();
