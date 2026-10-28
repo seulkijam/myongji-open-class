@@ -176,6 +176,54 @@
     padding: 14px 16px; border-radius: 12px; background: var(--bg);
     color: var(--ink-3); font-size: 14px; border: 1px dashed var(--line);
   }
+  .lesson-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+  button.btn { font-family: inherit; cursor: pointer; }
+  .btn.plan-btn { padding: 10px 18px; font-size: 14px; background: var(--card); color: var(--ink); border-color: var(--c, var(--ink)); }
+  .btn.plan-btn:hover { background: var(--c, var(--ink)); color: #fff; }
+
+  /* ---------- 수업지도안 창 ---------- */
+  .plan-dialog {
+    width: min(860px, calc(100% - 24px)); max-height: calc(100% - 24px);
+    padding: 0; border: none; border-radius: var(--radius);
+    background: var(--card); color: var(--ink); box-shadow: 0 20px 60px rgba(40, 25, 10, .25);
+  }
+  .plan-dialog::backdrop { background: rgba(43, 38, 32, .55); }
+  .plan-top {
+    position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px; background: var(--card); border-bottom: 4px solid var(--c, var(--accent));
+  }
+  .plan-top h2 { margin: 0; font-size: 18px; letter-spacing: -.02em; flex: 1; }
+  .plan-close {
+    flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line);
+    background: var(--bg); color: var(--ink); font-size: 22px; line-height: 1; cursor: pointer;
+  }
+  .plan-body { padding: 22px 24px 28px; }
+  .plan-body h3 { margin: 0 0 16px; font-size: clamp(18px, 2.4vw, 22px); letter-spacing: -.025em; line-height: 1.45; }
+  .plan-meta { display: grid; grid-template-columns: 112px 1fr; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 0 0 24px; }
+  .plan-meta dt, .plan-meta dd { margin: 0; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 14.5px; }
+  .plan-meta dt { background: var(--bg); color: var(--ink-2); font-weight: 700; }
+  .plan-meta dd { white-space: pre-line; }
+  .plan-meta dt:first-of-type, .plan-meta dt:first-of-type + dd { border-top: none; }
+  .plan-body h4 { margin: 0 0 12px; font-size: 16px; }
+  .stages { display: grid; gap: 14px; }
+  .stage { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .stage-head { display: flex; align-items: baseline; gap: 8px; padding: 9px 14px; background: var(--bg); font-weight: 700; }
+  .stage-head span { font-size: 13px; color: var(--ink-3); font-weight: 600; }
+  .stage-cols { display: grid; grid-template-columns: 1.6fr 1fr; }
+  .stage-cols > div { padding: 12px 14px; font-size: 14.5px; white-space: pre-line; }
+  .stage-cols > div + div { border-left: 1px solid var(--line); }
+  .stage-cols b { display: block; margin-bottom: 4px; font-size: 12px; color: var(--ink-3); }
+  .stage-tools { padding: 9px 14px; border-top: 1px dashed var(--line); font-size: 13.5px; color: var(--ink-2); }
+  .stage-tools b { color: var(--ink-3); margin-right: 6px; }
+  @media (max-width: 600px) {
+    .plan-top { padding: 14px 16px; }
+    .plan-body { padding: 18px 16px 24px; }
+    .plan-meta { grid-template-columns: 1fr; }
+    .plan-meta dt { padding-bottom: 4px; }
+    .plan-meta dd { border-top: none; padding-top: 4px; }
+    .stage-cols { grid-template-columns: 1fr; }
+    .stage-cols > div + div { border-left: none; border-top: 1px solid var(--line); }
+  }
 
   /* ---------- 사례 나눔 ---------- */
   .share { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; }
@@ -627,6 +675,14 @@
   </div>
 </footer>
 
+<dialog class="plan-dialog" id="plan-dialog" aria-labelledby="plan-title">
+  <div class="plan-top">
+    <h2 id="plan-title">수업지도안</h2>
+    <button type="button" class="plan-close" aria-label="닫기">×</button>
+  </div>
+  <div class="plan-body" id="plan-body"></div>
+</dialog>
+
 <script>
   // ===== 행사 데이터 =====
   // 수업 내용이 정해지면 이 배열만 고치면 됩니다.
@@ -649,25 +705,137 @@
     {
       id: 'eng', no: '5-3', color: 'var(--c-eng)', subject: '영어', period: '5교시', time: '13:25~14:10',
       room: '2학년 7반', target: '2학년 7반', teacher: '유*린',
-      title: 'Input enhancement를 활용한 target form 학습',
+      title: 'call+목적어+목적격보어 형태 학습',
       unit: '바이브코딩으로 제작한 웹앱과 ZEP Quiz 활용',
       tools: ['바이브코딩 웹앱', 'ZEP Quiz']
     },
     {
       id: 'math', no: '6-1', color: 'var(--c-math)', subject: '수학', period: '6교시', time: '14:20~15:05',
       room: '1학년 5반', target: '1학년 5반', teacher: '이*준',
-      title: '3D도형탐구교실을 통한 입체도형 학습',
+      title: '학교 속 입체 탐구와 AI 오류 탐정',
       unit: '바이브코딩으로 제작한 웹앱과 Canva 활용',
       tools: ['3D도형탐구교실(바이브코딩 웹앱)', 'Canva']
     },
     {
       id: 'rel', no: '6-2', color: 'var(--c-rel)', subject: '종교', period: '6교시', time: '14:20~15:05',
       room: '아가페실', target: '1학년', teacher: '이*열',
-      title: 'AI와 함께 하는 사회정서교육',
+      title: 'AI의 위로 vs 친구의 위로',
       unit: '바이브코딩으로 제작한 웹앱 활용',
       tools: ['바이브코딩 웹앱', '사회정서학습(SEL)']
     }
   ];
+
+  // 수업지도안 (배포 자료 PDF 내용). 단계의 \n은 줄바꿈.
+  const PLANS = {
+    info: {
+      course: '인공지능과 미래사회(1학년)', type: '에듀테크 및 AI도구 활용 학생참여형 수업',
+      topic: '바이브 코딩으로 구축한 수업 사이트를 활용한 ‘AI가 쓴 글, 구별할 수 있을까’ 활동',
+      competency: '인공지능 소양, 디지털 문화 소양(정보과)\n지식정보처리 역량, 공동체 역량',
+      unit: 'Ⅴ. 인공지능과 사회적 영향 2. 인공지능과 윤리',
+      standards: '[9인-05-02] 다양한 유형의 인공지능 윤리를 이해하고 지능정보사회의 구성원으로서 올바른 인공지능 윤리를 실천한다.\n[9인-02-01] 인공지능에서 데이터의 역할을 이해하고 데이터의 필요성과 중요성을 탐색한다.',
+      goals: '1. 학생이 쓴 글과 AI가 쓴 글을 판별하고, 글 속 단서와 1학년의 176명 데이터를 근거로 AI 글의 문제(오류, 편향, 환각)를 찾을 수 있다.\n2. AI 글을 구별하기 어려운 상황에서 필요한 원칙을 인공지능 윤리 7대 원칙에서 찾아 근거와 함께 설명하고, AI 활용 약속을 정할 수 있다.',
+      stages: [
+        { name: '도입', min: 5,
+          teacher: '· 지난 시간 차시 복습\n  - AI가 그린 그림, 표시 한계, 학급 규칙, 학생 소개글 작성 과정\n· 핵심 질문: ‘AI가 쓴 글인지 알아맞히는 것과 믿을 수 있는 글인지 판단하는 것은 같은가?’\n· 도입 찬반 온도계 ‘AI가 쓴 글인지 구별하기 어렵다면, 굳이 구별할 필요가 있을까?’',
+          student: '- 지난 시간 결과 회상, 찬반 온도계와 이유 기록',
+          tools: '학급 사이트(찬반 온도계)' },
+        { name: '전개', min: 30,
+          teacher: '· 학생·AI 소개글을 익명으로 섞어 제시. 글별 판단(AI/사람), 판별 기준과 확신도(1~5) 기록. AI 같다 ≠ 나쁜 글 안내.\n· 전체 판별 결과 공개. “글만 보고 AI가 얼마나 도왔는지도 알 수 있을까?” “구별하지 못하면 문제가 생기는 글도 있을까?”\n· 연애 편지, 사과 편지, 학교 과제 등 AI를 어디까지 활용할 수 있을까 1~5단계 선택\n  “어디까지 괜찮을까? 왜 그렇게 생각했을까?”\n  선택한 이유와 관련 윤리원칙 고르기 활동',
+          student: '- 글을 읽고 AI가 작성했는지 추측. 근거가 되는 표현을 선택하여 설명\n- 판별의 어려움과 한계를 확인. 글의 용도에 따라 달라질 수 있음을 확인\n- 선택한 글에 대해 허용할 수 있는 최고 단계를 결정. 이유와 윤리원칙을 1개 이상 선택하여 자기 의견 게시. 다른 의견과 비교',
+          tools: '학급 사이트(AI 글쓰기 판별 결과 화면, 공유 보드)' },
+        { name: '정리', min: 10,
+          teacher: '· 찬반 온도계 재응답. 변한 의견 비교\n  “의견보다 중요한 것은 그 의견에 보다 구체적이고 정확한 근거를 제시할 수 있는 것”',
+          student: '- 핵심 질문에 다시 응답. 자신의 AI 사용 기준과 이유를 짧게 정리',
+          tools: '온도계·출구 티켓' }
+      ]
+    },
+    tech: {
+      course: '기술(2학년)', type: 'AI 활용, 프로젝트 활동',
+      topic: '생성형 AI를 활용한 UDL 기반 협동학습 수업 설계: ‘친환경 에너지의 활용’ 단원 중심',
+      competency: 'TBL / PBL / AI 및 디지털 리터러시',
+      unit: 'VI. 친환경 에너지와 수송 기술\n1-1. 친환경 에너지의 이해\n1-2. 친환경 에너지의 활용',
+      standards: '[9기기03-10] 친환경 에너지 자원의 특성을 이해하고, 종류와 활용 사례를 조사하여 친환경 에너지 개발의 중요성을 인식한다.',
+      goals: '• 친환경 에너지 자원의 종류와 특성을 이해하여 친환경 에너지 개발의 중요성을 설명할 수 있다.',
+      tools: '태블릿PC, Padlet, Google Sheet, Gemini, Perplexity',
+      stages: [
+        { name: '도입', min: 10,
+          teacher: '◎ 수업 목표 및 활동 순서 안내\n- 이전 차시 활동 점검\n- 이번 차시의 활동 목표 안내\n◎ 조별 과제 수행 상황 점검\n- 공유 문서 제작 상황 점검',
+          student: '◎ 조별 과제 수행 상황 점검\n- 과제 분석\n- 담당 조사 내용 점검\n- 공유 문서 내용 점검' },
+        { name: '전개', min: 30,
+          teacher: '◎ 조별 활동 지원\n- 학생들의 활동을 점검하며 애로사항 해결 지원\n- 조별 활동을 관찰하며 발문 및 피드백 제공',
+          student: '◎ 조사 내용 공유 및 상호 피드백\n- 자신이 담당한 조사 내용에 대해 조원들에게 공유\n- 공유된 내용에 대한 상호 교차 검증 및 피드백 실시' },
+        { name: '정리', min: 5,
+          teacher: '◎ 조별 과제 수행 상황 점검\n◎ 다음 차시 활동 안내',
+          student: '◎ 공유 문서 내용 점검\n◎ 다음 차시 활동 점검' }
+      ]
+    },
+    eng: {
+      course: '영어(2학년)', type: '개별학습, 퀴즈 학습',
+      topic: 'call+목적어+목적격보어 형태 학습',
+      competency: '지식정보처리역량, 협력적소통역량',
+      unit: 'Lesson 7. Let’s Enjoy Festivals',
+      standards: '[9영02-03] 친숙한 주제에 관해 사실적 정보를 설명한다.\n[9영02-04] 친숙한 주제에 관해 경험이나 계획을 설명한다.\n[9영02-10] 적절한 전략을 활용하여 상황이나 목적에 맞게 말하거나 쓴다.',
+      goals: '1. 주어진 글에서 “동사+목적어+목적격보어” 형태의 문장의 규칙을 도출한다.\n2. 학습한 문장 규칙을 활용하여 문장을 작성할 수 있다.\n3. 퀴즈 학습을 통해 학습한 어법 내용을 확인한다.',
+      stages: [
+        { name: '도입', min: 7,
+          teacher: '- Introduce the concept of today’s lesson.\n  (You are at English festival and missions are finding target forms and writing some sentences using the target forms.)\n- Ask co-teacher(협력강사) to help students\n- Explain how to use web-app',
+          student: '- Focus on teacher’s instruction and ask if they have questions',
+          tools: 'NA' },
+        { name: '전개', min: 30,
+          teacher: '1. Finding Target Forms\n  - In the app, Ss can choose the steps. First, a paragraph using target forms. Second, a paragraph with target form highlighted. Third, a paragraph with target form and its translation in Korean.\n  - Ss have to find out a target structure and get approved by teacher to go to the second stage: writing sentences\n2. Writing Sentences\n  - In this section, Ss can also choose between three steps: write own stories, translate in English, and fill in the blanks.\n  - The same as step 1, Ss need T’s approval. To get as many points, they are to write as many sentences as they can.\nAfter two sections finished, T explains the structure of target form: verb + object + objective complement\n3. Quizzes\n  - Using ZEP Quiz, Ss will answer the questions.',
+          student: '- Get into the apps and follow as the instructions in the app say.',
+          tools: '교사 자체 제작 앱 및 ZEP Quiz' },
+        { name: '정리', min: 8,
+          teacher: '- T will check three Ss with the most points\n- Ss who complete the last mission can go out of the classroom.',
+          student: '- Complete the last mission of the teacher.',
+          tools: '교사 자체 제작 앱' }
+      ]
+    },
+    math: {
+      course: '수학(1학년)', type: 'AI·디지털 도구 활용 모둠 탐구',
+      topic: '학교 속 입체 탐구와 AI 오류 탐정',
+      competency: '추론, 의사소통, 연결, 정보처리',
+      unit: 'Ⅴ. 도형의 성질 – 4. 다면체와 회전체',
+      standards: '구체적인 모형이나 공학 도구를 이용하여 다면체와 회전체의 성질을 탐구하고, 이를 설명할 수 있다.',
+      goals: '생활 속 물체를 단순화하여 다면체 또는 회전체로 구분할 수 있다.\n도형의 성질을 관찰하고 판단의 근거를 설명할 수 있다.\nAI 설명의 오류를 찾아 고치고 그 이유를 설명할 수 있다.',
+      stages: [
+        { name: '도입', min: 4,
+          teacher: '- 물체와 수학적 도형의 차이를 묻고 학습 목표를 안내한다.\n- 촬영 범위, 복귀 시각, 모둠 역할을 안내한다.',
+          student: '- 물체에서 남길 특징과 생략할 부분을 말한다.\n- 모둠 안에서 역할을 나눈다.',
+          tools: '전자칠판, 디벗' },
+        { name: '전개', min: 35,
+          teacher: '- 학교 안에 있는 물체 사진 4장을 촬영하게 하고 전송된 사진을 확인한다.\n- 첫 생각을 듣고 AI 후보를 성질로 비교하게 한다.\n- 추가 사진 2개의 핵심 성질과 판단 근거를 기록하게 한다.\n- 오류를 근거로 수정하고 AI와 대화하며 설명을 보완하게 한다.',
+          student: '- 탐구하고자 하는 물체의 사진을 찍는다.\n- 물체에 대한 자신의 생각을 적고 AI와 비교한 뒤 성질을 탐구하여 기록한다.\n- 추가로 2개의 물체에 대하여 비교 탐구하여 기록한다.\n- AI가 제시한 설명에 대한 오류를 찾고 오류를 근거로 수정하고 AI와 대화하며 설명을 보완해 나간다.',
+          tools: '디벗' },
+        { name: '정리', min: 6,
+          teacher: '- 모둠의 탐구 근거와 오류 수정 사례를 공유한다.\n- 개별 출구 응답으로 성질 이해와 AI 검증 태도를 확인한다.',
+          student: '- 탐구한 근거와 단순화한 부분을 발표한다.\n- 개별 응답을 쓴다.',
+          tools: '전자칠판' }
+      ]
+    },
+    rel: {
+      course: '종교(1학년)', type: '개별 글쓰기, 블라인드 투표, 토의 학습',
+      topic: 'AI의 위로 vs 친구의 위로',
+      competency: '협력적 소통 역량, 공동체 역량',
+      unit: '서울 사회정서교육 ‘대인관계·공감’ 영역 - 다른 사람의 감정 알아차리기',
+      standards: '[9사회정서02-01] 타인의 감정과 처지를 이해하고 공감의 중요성을 인식하며, 공감하는 언어와 행동을 성찰하고 실천한다.\n[9사회정서02-03] 건강한 관계와 그렇지 않은 관계를 구분하고 관계 속에서 나의 역할과 경계를 설정하며, 관계 유지 및 회복을 위한 태도를 함양한다.',
+      goals: '1. 위로에 담기는 요소(마음 알아주기·내 편 되어 주기·함께하자고 하기·물어보고 들어 주기)를 찾을 수 있다.\n2. 친구만 해 줄 수 있는 위로를 담아 답장을 다시 쓸 수 있다.\n3. AI가 줄 수 있는 것과 친구만 줄 수 있는 것을 구분하고, 곁에 있어 주는 친구가 되려는 마음을 갖는다.',
+      stages: [
+        { name: '도입', min: 7,
+          teacher: '① 입장(2′) 큰 화면 QR로 출석번호만 입력해 입장\n② 생각 투표(2′) “위로하는 말이 좋다면, 누가 보냈는지는 중요하지 않다.” 제시\n③ 하린이의 메시지(3′) 단톡방에서 혼자 빠진 하린이의 메시지를 띄우고 “하린이는 지금 어떤 마음일까?” 발문',
+          student: '- 출석번호로 입장\n- O/X 생각 투표\n- 하린이의 마음을 짐작하며 짝과 이야기 나누기',
+          tools: '바이브코딩 제작 웹앱(QR 입장, 실시간 투표), 1인 1기기' },
+        { name: '전개', min: 33,
+          teacher: '◇ 눈 가리고 비교(20′)\n④ 답장 쓰기(7′) 하린이에게 보낼 답장 쓰기 안내, 교사 휴대폰으로 답장 확인\n⑤ 눈 가리고 투표(8′) 쓴 사람을 가린 두 답장(우리 반·AI) 중 더 위로가 되는 답장 고르기 안내\n⑥ 결과 공개(5′) TOP 5와 쓴 사람 공개, “그럼 하린이에게 친구는 필요 없을까?” 발문\n◇ 친구만 할 수 있는 위로(13′)\n⑦ 위로의 비밀(4′) TOP 5 답장에 담긴 위로의 요소를 고르게 하고 막대그래프로 정리\n⑧ 친구만 할 수 있는 것(4′) “AI는 못 하고 친구인 나만 해 줄 수 있는 위로는?” 발문\n⑨ 다시 쓰기(5′) 친구만 할 수 있는 한 가지를 넣어 다시 쓴 답장을 읽어 주며 달라진 점 묻기',
+          student: '- 답장 쓰기(120자)\n- 두 답장 중 고르고 쓴 사람 짐작하기\n- 좋은 위로의 까닭 말하기\n- 위로 요소 고르기\n- 친구만 할 수 있는 위로 쓰기\n- 답장 다시 쓰기(150자)',
+          tools: '수업 웹앱(블라인드 투표), 생성형 AI(Claude)(비교 답장 생성, 답장 살피기), 교사 휴대폰(답장 확인, 화면 공유)' },
+        { name: '정리', min: 5,
+          teacher: '⑩ 다시 투표·소감(3′) 처음 문장에 다시 투표하게 하고 처음과 지금의 결과 비교\n⑪ 마무리(2′) “AI는 좋은 말을 빌려줄 수 있어요. 하지만 내일 하린이 옆에 앉아 줄 수 있는 건 우리예요.”',
+          student: '- 처음 문장에 다시 투표\n- 새로 알게 된 것 한 가지 쓰기',
+          tools: '수업 웹앱(투표 비교, 소감)' }
+      ]
+    }
+  };
 
   const SLOTS = [
     { label: '5교시', time: '13:25 ~ 14:10', items: ['info', 'tech', 'eng'] },
@@ -711,9 +879,44 @@
       <dl class="facts">
         ${fact('일시', `11. 3.(화) ${l.period}`)}${fact('장소', l.room)}${fact('대상', l.target)}${fact('수업자', l.teacher)}
       </dl>
-      <div class="tools" style="margin:0">${l.tools.map(t => `<span class="tool">${esc(t)}</span>`).join('')}</div>
+      <div class="lesson-foot">
+        <div class="tools" style="margin:0">${l.tools.map(t => `<span class="tool">${esc(t)}</span>`).join('')}</div>
+        ${PLANS[l.id] ? `<button type="button" class="btn plan-btn" data-plan="${l.id}">수업지도안 보기</button>` : ''}
+      </div>
     </article>`;
   }).join('');
+
+  // 수업지도안 창
+  const planDialog = document.getElementById('plan-dialog');
+  function openPlan(id) {
+    const l = LESSONS.find(x => x.id === id), p = PLANS[id];
+    const row = (k, v) => `<dt>${k}</dt><dd>${esc(v)}</dd>`;
+    planDialog.style.setProperty('--c', l.color);
+    document.getElementById('plan-title').textContent = `${l.no}. ${l.subject} 수업지도안`;
+    document.getElementById('plan-body').innerHTML = `
+      <h3>${esc(p.topic)}</h3>
+      <dl class="plan-meta">
+        ${row('교과(학년)', p.course)}${row('수업유형', p.type)}${row('핵심역량', p.competency)}
+        ${row('해당단원', p.unit)}${row('성취기준', p.standards)}${row('학습목표', p.goals)}
+        ${p.tools ? row('AI·디지털 도구', p.tools) : ''}
+      </dl>
+      <h4>활동 내용</h4>
+      <div class="stages">${p.stages.map(s => `
+        <div class="stage">
+          <div class="stage-head">${esc(s.name)} <span>${esc(s.min)}분</span></div>
+          <div class="stage-cols"><div><b>교사</b>${esc(s.teacher)}</div><div><b>학생</b>${esc(s.student)}</div></div>
+          ${s.tools ? `<div class="stage-tools"><b>AI·디지털 도구</b>${esc(s.tools)}</div>` : ''}
+        </div>`).join('')}
+      </div>`;
+    planDialog.showModal();
+    planDialog.scrollTop = 0;
+  }
+  document.getElementById('lesson-list').addEventListener('click', e => {
+    const b = e.target.closest('[data-plan]');
+    if (b) openPlan(b.dataset.plan);
+  });
+  planDialog.querySelector('.plan-close').addEventListener('click', () => planDialog.close());
+  planDialog.addEventListener('click', e => { if (e.target === planDialog) planDialog.close(); });
 
   // ===== 교내 배치도 =====
   // 2026학년도 2학기 교과교실 배치도를 바탕으로 다시 그림(교사 이름은 넣지 않음).
