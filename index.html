@@ -502,7 +502,7 @@
           <h3>명지중 AI교무실</h3>
           <p>우리 학교 교사들이 바이브코딩으로 직접 만들어 쓰고 있는 업무 웹앱을 공개합니다. 미리 둘러보시고 오시면 사례 나눔이 더 와닿습니다.</p>
         </div>
-        <a class="btn" id="ai-office-link" href="https://cleveranawim-source.github.io/ai-office-guide/deck.html#1" target="_blank" rel="noopener">AI교무실 열어 보기 →</a>
+        <a class="btn" id="ai-office-link" href="https://ai-office-intro.vercel.app/" target="_blank" rel="noopener">AI교무실 열어 보기 →</a>
       </aside>
     </div>
   </div>
@@ -657,7 +657,7 @@
         </div>
       </div>
       <div class="floormap-scroll">
-        <svg id="floor-svg" viewBox="60 90 805 1190" role="img" aria-label="명지중학교 교내 배치도. 6층 정보교과실, 4층 2학년 7반과 8반, 3층 1학년 5반, 2층 아가페실과 글담도서관에서 행사가 열립니다."></svg>
+        <svg id="floor-svg" viewBox="60 90 805 1190" role="img" aria-label="명지중학교 교내 배치도. 6층 정보교과실, 4층 2학년 7반과 8반, 2층 아가페실과 글담도서관에서 행사가 열립니다."></svg>
       </div>
       <p class="floormap-note">휴대폰에서는 배치도를 좌우로 밀어서 보실 수 있습니다.</p>
     </div>
@@ -690,35 +690,35 @@
   const LESSONS = [
     {
       id: 'info', no: '5-1', color: 'var(--c-info)', subject: '정보', period: '5교시', time: '13:25~14:10',
-      room: '정보교과실', target: '1학년', teacher: '조*택',
+      room: '정보교과실', target: '1학년 5반', teacher: '조*택',
       title: '“AI가 쓴 글 구별할 수 있을까?”',
       unit: '바이브코딩으로 구축한 수업 사이트 활용',
       tools: ['바이브코딩 수업 사이트']
     },
     {
       id: 'tech', no: '5-2', color: 'var(--c-tech)', subject: '기술', period: '5교시', time: '13:25~14:10',
-      room: '2학년 8반', target: '2학년 8반', teacher: '이*재',
+      room: '2학년 8반', target: '2학년 10반', teacher: '이*재',
       title: '생성형 AI를 활용한 UDL 기반 협동학습 수업 설계',
       unit: "'친환경 에너지의 활용' 단원",
       tools: ['생성형 AI', 'UDL(보편적 학습 설계)', '협동학습']
     },
     {
       id: 'eng', no: '5-3', color: 'var(--c-eng)', subject: '영어', period: '5교시', time: '13:25~14:10',
-      room: '2학년 7반', target: '2학년 7반', teacher: '유*린',
+      room: '2학년 7반', target: '2학년 2반', teacher: '유*린',
       title: 'call+목적어+목적격보어 형태 학습',
       unit: '바이브코딩으로 제작한 웹앱과 ZEP Quiz 활용',
       tools: ['바이브코딩 웹앱', 'ZEP Quiz']
     },
     {
       id: 'math', no: '6-1', color: 'var(--c-math)', subject: '수학', period: '6교시', time: '14:20~15:05',
-      room: '1학년 5반', target: '1학년 5반', teacher: '이*준',
+      room: '글담도서관', target: '1학년 9반', teacher: '이*준',
       title: '학교 속 입체 탐구와 AI 오류 탐정',
       unit: '바이브코딩으로 제작한 웹앱과 Canva 활용',
       tools: ['3D도형탐구교실(바이브코딩 웹앱)', 'Canva']
     },
     {
       id: 'rel', no: '6-2', color: 'var(--c-rel)', subject: '종교', period: '6교시', time: '14:20~15:05',
-      room: '아가페실', target: '1학년', teacher: '이*열',
+      room: '아가페실', target: '1학년 4반', teacher: '이*열',
       title: 'AI의 위로 vs 친구의 위로',
       unit: '바이브코딩으로 제작한 웹앱 활용',
       tools: ['바이브코딩 웹앱', '사회정서학습(SEL)']
@@ -925,7 +925,7 @@
     { n: '5-1', floor: '6층', room: '정보교과실', what: '5교시 정보', href: '#lesson-info' },
     { n: '5-2', floor: '4층', room: '2학년 8반', what: '5교시 기술', href: '#lesson-tech' },
     { n: '5-3', floor: '4층', room: '2학년 7반', what: '5교시 영어', href: '#lesson-eng' },
-    { n: '6-1', floor: '3층', room: '1학년 5반', what: '6교시 수학', href: '#lesson-math' },
+    { n: '6-1', floor: '2층', room: '글담도서관', what: '6교시 수학', href: '#lesson-math' },
     { n: '6-2', floor: '2층', room: '아가페실', what: '6교시 종교', href: '#lesson-rel' },
     { n: '7', floor: '2층', room: '글담도서관', what: '7교시 사례 나눔 · 쉬는 시간 휴게실', href: '#share' }
   ];
@@ -967,7 +967,7 @@
     ['cls', 618, 667, 107, 48, '1-10'], ['stair', 618, 715, 53, 40, '창고'], ['stair', 671, 715, 54, 40, '계단'],
     ['cls', 755, 667, 103, 48, '1-9'], ['cls', 755, 715, 103, 52, '1-8'], ['cls', 755, 767, 103, 55, '1-7'],
     ['office', 163, 770, 108, 52, '1학년 교과연구실\n문화교육부'],
-    ['event', 298, 770, 107, 52, '1-5', '6-1'], ['dress', 405, 770, 48, 52, '탈의실'],
+    ['cls', 298, 770, 107, 52, '1-5'], ['dress', 405, 770, 48, 52, '탈의실'],
     ['dress', 573, 770, 45, 52, '탈의\n실'], ['cls', 618, 770, 107, 52, '1-6'],
     // 2층
     ['special', 163, 822, 108, 60, '온새미로실'], ['office', 163, 882, 108, 35, '체육실'],
@@ -979,7 +979,7 @@
     ['entry', 405, 975, 48, 95, '현관\n·\n로비'], ['entry', 573, 975, 45, 95, '현관'],
     ['wc', 298, 1003, 53, 30, '화장실'], ['wc', 351, 1003, 54, 30, '화장실'], ['stair', 298, 1033, 107, 37, '창고'],
     ['stair', 618, 937, 53, 40, '창고'], ['stair', 671, 937, 54, 40, '계단'],
-    ['event', 725, 882, 133, 188, '글담도서관', '7'],
+    ['event', 725, 882, 133, 188, '글담도서관', ['6-1', '7']],
     // 1층
     ['cls', 163, 1092, 108, 52, '과학실1'], ['cls', 163, 1144, 108, 72, '미술실1'], ['special', 163, 1216, 135, 56, '보건실'],
     ['cls', 298, 1092, 107, 52, '과학실2'], ['stair', 298, 1144, 54, 47, '계단'], ['stair', 352, 1144, 53, 47, 'EV'],
@@ -1020,10 +1020,18 @@
     let s = `<rect${ev ? ' class="ev"' : ''} x="${x}" y="${y}" width="${w}" height="${h}" fill="${FILL[type]}" stroke="#c9b9a0" stroke-width="1"/>`;
     s += svgText(x, y, w, h, label, ev ? { size: 15, weight: 800, fill: '#fff' } : {});
     if (!n) return s;
-    const pw = n.length > 1 ? 32 : 22;
-    s += `<rect x="${x + 4}" y="${y + 4}" width="${pw}" height="20" rx="10" fill="#fff"/><text x="${x + 4 + pw / 2}" y="${y + 14}" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="800" fill="#a0714a">${n}</text>`;
-    const spot = SPOTS.find(p => p.n === n);
-    return `<a href="${spot.href}"><title>${esc(spot.room)} · ${esc(spot.what)}</title>${s}</a>`;
+    // 한 장소에 여러 수업이면 번호 표시를 위에서부터 차례로 달고, 번호마다 그 수업으로 이동
+    const badge = (m, by) => {
+      const pw = m.length > 1 ? 32 : 22;
+      return `<rect x="${x + 4}" y="${by}" width="${pw}" height="20" rx="10" fill="#fff"/><text x="${x + 4 + pw / 2}" y="${by + 10}" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="800" fill="#a0714a">${m}</text>`;
+    };
+    const ns = [].concat(n);
+    const spots = ns.map(m => SPOTS.find(p => p.n === m));
+    const main = spots[spots.length - 1];
+    if (ns.length === 1) s += badge(ns[0], y + 4);
+    let out = `<a href="${main.href}"><title>${esc(spots.map(p => p.what).join(' · '))}</title>${s}</a>`;
+    if (ns.length > 1) out += ns.map((m, i) => `<a href="${spots[i].href}"><title>${esc(spots[i].room)} · ${esc(spots[i].what)}</title>${badge(m, y + 4 + i * 24)}</a>`).join('');
+    return out;
   }).join('');
   svg += `<rect x="70" y="97" width="788" height="1175" fill="none" stroke="#2b2620" stroke-width="2.5"/>`;
   document.getElementById('floor-svg').innerHTML = svg;
