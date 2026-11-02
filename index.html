@@ -29,6 +29,7 @@
     --c-share: #a0714a;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   body {
     margin: 0;
@@ -309,6 +310,40 @@
     .br-wide { display: none; }
   }
 
+  /* ---------- 참관 신청 접기 ---------- */
+  .apply-toggle { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 24px 28px; margin-bottom: 20px; }
+  .apply-toggle p { margin: 0; color: var(--ink-2); }
+  .apply-toggle .btn[aria-expanded=true] .arrow { transform: rotate(180deg); }
+  .apply-toggle .arrow { display: inline-block; transition: transform .2s; }
+
+  /* ---------- 참관록 ---------- */
+  .review-picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .review-pick {
+    display: block; width: 100%; text-align: left; font: inherit; color: var(--ink); cursor: pointer;
+    padding: 14px 16px; border-radius: 14px; background: #fff;
+    border: 1px solid var(--line); border-left: 4px solid var(--c);
+    transition: background .15s, border-color .15s;
+  }
+  .review-pick:hover { border-color: var(--c); }
+  .review-pick[aria-pressed=true] { background: var(--accent-soft); border-color: var(--c); box-shadow: 0 0 0 2px var(--c) inset; }
+  .review-pick b { display: block; font-size: 15px; }
+  .review-pick span { display: block; font-size: 13px; color: var(--ink-3); }
+  .review-form { padding: 36px; margin-top: 20px; }
+  .review-form .chosen { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-bottom: 18px; margin-bottom: 24px; border-bottom: 4px solid var(--c, var(--accent)); }
+  .review-form .chosen h3 { margin: 0; font-size: 20px; letter-spacing: -.02em; line-height: 1.45; flex: 1 1 260px; }
+  .field textarea {
+    width: 100%; font: inherit; font-size: 16px; color: var(--ink); line-height: 1.6;
+    padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: #fff; resize: vertical; min-height: 130px;
+  }
+  .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field textarea[aria-invalid=true] { border-color: #b0503a; }
+  .field .note { margin: 0; padding: 10px 14px; border-radius: 10px; background: var(--accent-soft); font-size: 14px; color: var(--ink); }
+  .btn.review-btn { padding: 10px 18px; font-size: 14px; background: var(--c, var(--ink)); color: #fff; border-color: var(--c, var(--ink)); }
+  .lesson-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .share-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .share-foot .tbd { flex: 1 1 220px; }
+  @media (max-width: 640px) { .review-form { padding: 24px 20px; } }
+
   /* ---------- 오시는 길 ---------- */
   .route { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .route .addr { padding: 28px; }
@@ -391,6 +426,7 @@
       <li><a href="#lessons">공개 수업</a></li>
       <li><a href="#share">사례 나눔</a></li>
       <li><a href="#apply">참관 신청</a></li>
+      <li><a href="#review">참관록</a></li>
       <li><a href="#route">오시는 길</a></li>
       <li><a href="#contact">문의</a></li>
     </ul>
@@ -422,7 +458,7 @@
         </span>
       </div>
       <div class="btns">
-        <a class="btn primary" href="#apply">참관 신청하기 →</a>
+        <a class="btn primary" href="#review">참관록 작성하기 →</a>
         <a class="btn ghost" href="#schedule">일정 보기</a>
       </div>
     </div>
@@ -494,7 +530,10 @@
         </div>
         <h3 style="margin:0 0 10px;font-size:23px;letter-spacing:-.025em;line-height:1.45">바이브코딩을 통한 AI교무실 조성 및<br>업무 자동화 사례 나눔</h3>
         <p style="color:var(--ink-2);margin:0 0 18px">코딩 전문가가 아닌 교사가 AI와 대화하며 만든 웹앱으로 교무실 업무를 어떻게 바꾸었는지, 만드는 과정과 실제 활용 사례를 소개합니다.</p>
-        <div class="tbd">담당: 명지중학교 정보교육부</div>
+        <div class="share-foot">
+          <div class="tbd">담당: 명지중학교 정보교육부</div>
+          <a class="btn review-btn" href="#review-share" style="--c: var(--c-share)">사례 나눔 참관록 쓰기</a>
+        </div>
       </article>
       <aside class="card app">
         <div>
@@ -516,7 +555,11 @@
       <h2>참관 신청</h2>
       <p>교실 공간이 한정되어 있어 사전 신청을 받습니다.</p>
     </div>
-    <form class="card apply-form" id="apply-form" novalidate>
+    <div class="card apply-toggle">
+      <p>참관 신청서는 접혀 있습니다. 버튼을 누르면 펼쳐집니다.</p>
+      <button type="button" class="btn" id="apply-open" aria-expanded="false" aria-controls="apply-form">참관 신청서 열기 <span class="arrow">▾</span></button>
+    </div>
+    <form class="card apply-form" id="apply-form" novalidate hidden>
       <div class="form-head">
         <h3>2026 명지중학교 AI·디지털 활용 선도학교<br class="br-wide"> 수업나눔 참관 신청</h3>
         <ul class="form-note">
@@ -582,23 +625,70 @@
       </div>
     </form>
 
-    <div>
-      <div class="card panel">
-        <span class="status">당일 안내</span>
-        <h3>참관록</h3>
-        <p>참관 직후 짧은 참관록을 남겨 주시면 수업 개선에 소중히 활용하겠습니다.</p>
-        <ul>
-          <li>참관록 링크와 QR 코드는 당일 교실 앞에서도 안내합니다.</li>
-        </ul>
-        <!-- TODO: 참관록 폼 주소 -->
-        <a class="btn ghost disabled" href="#" target="_blank" rel="noopener">참관록 작성하기 →</a>
-      </div>
+  </div>
+</section>
+
+<!-- 참관록 -->
+<section class="block alt" id="review">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Review</span>
+      <h2>참관록 작성</h2>
+      <p>참관하신 수업이나 사례 나눔을 고르고, 수업 나눔 의견과 궁금한 점을 남겨 주세요.</p>
     </div>
+    <div class="review-picks" id="review-picks" role="group" aria-label="참관록을 쓸 수업 고르기"></div>
+
+    <form class="card review-form" id="review-form" novalidate hidden>
+      <div class="chosen">
+        <span class="badge" id="r-badge"></span>
+        <h3 id="r-title"></h3>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="r-school"><span class="num">1.</span>학교 <span class="hint">(선택)</span></label>
+          <input type="text" id="r-school" maxlength="40" placeholder="예: 명지중학교" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="r-name"><span class="num">2.</span>이름 <span class="hint">(선택)</span></label>
+          <input type="text" id="r-name" maxlength="20" autocomplete="name">
+        </div>
+        <div class="field full">
+          <label for="r-opinion"><span class="num">3.</span>수업 나눔 의견<span class="req">*</span></label>
+          <textarea id="r-opinion" maxlength="3000" placeholder="인상 깊었던 점, 우리 학교에 적용해 보고 싶은 점, 함께 고민해 보고 싶은 점 등을 자유롭게 적어 주세요."></textarea>
+        </div>
+        <div class="field full">
+          <label for="r-question"><span class="num">4.</span>질문 <span class="hint">(선택)</span></label>
+          <textarea id="r-question" maxlength="2000" placeholder="수업자나 발표자에게 궁금한 점을 적어 주세요."></textarea>
+        </div>
+        <div class="field full">
+          <label for="r-email"><span class="num">5.</span>답변 받을 이메일 <span class="hint">(질문을 남기신 경우)</span></label>
+          <p class="note">현장에서 답변드리지 못한 질문은 메일로 답변을 보내 드리겠습니다. 답변을 받으실 메일 주소를 남겨 주세요.</p>
+          <input type="email" id="r-email" maxlength="80" autocomplete="email" placeholder="example@sen.go.kr">
+        </div>
+        <div class="field full" id="r-consent" hidden>
+          <span style="font-weight:700"><span class="num">6.</span>개인정보 수집·이용 동의<span class="req">*</span> <span class="hint">(이름이나 이메일을 적으신 경우)</span></span>
+          <div class="consent">
+            <dl>
+              <dt>수집 항목</dt><dd>성명, 소속 학교, 이메일</dd>
+              <dt>수집 목적</dt><dd>참관록 확인 및 질문에 대한 답변 발송</dd>
+              <dt>보유 기간</dt><dd>2026년 12월 31일까지 보유 후 지체 없이 파기</dd>
+            </dl>
+            <p>동의를 거부할 수 있으며, 이 경우 이름·이메일을 비우고 의견만 남기실 수 있습니다.</p>
+            <label><input type="checkbox" id="r-agree"> 개인정보 수집·이용에 동의합니다.</label>
+          </div>
+        </div>
+      </div>
+      <div class="hp" aria-hidden="true"><label>홈페이지<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <div class="form-foot">
+        <button type="submit" class="btn primary">참관록 보내기 →</button>
+        <p class="form-msg" id="review-msg" role="status" aria-live="polite"></p>
+      </div>
+    </form>
   </div>
 </section>
 
 <!-- 오시는 길 -->
-<section class="block alt" id="route">
+<section class="block" id="route">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Location</span>
@@ -881,7 +971,10 @@
       </dl>
       <div class="lesson-foot">
         <div class="tools" style="margin:0">${l.tools.map(t => `<span class="tool">${esc(t)}</span>`).join('')}</div>
-        ${PLANS[l.id] ? `<button type="button" class="btn plan-btn" data-plan="${l.id}">수업지도안 보기</button>` : ''}
+        <div class="lesson-btns">
+          ${PLANS[l.id] ? `<button type="button" class="btn plan-btn" data-plan="${l.id}">수업지도안 보기</button>` : ''}
+          <a class="btn review-btn" href="#review-${l.id}">참관록 쓰기</a>
+        </div>
       </div>
     </article>`;
   }).join('');
@@ -1116,6 +1209,117 @@
     } catch (err) {
       btn.disabled = false;
       showMsg('전송 중 문제가 생겼습니다. 잠시 후 다시 시도하시거나 메일로 문의해 주세요.', true);
+    }
+  });
+
+  // 참관 신청서 접기/펼치기 (기본은 접힘)
+  const applyBtn = document.getElementById('apply-open');
+  function setApply(open) {
+    form.hidden = !open;
+    applyBtn.setAttribute('aria-expanded', open);
+    applyBtn.firstChild.textContent = open ? '참관 신청서 접기 ' : '참관 신청서 열기 ';
+  }
+  applyBtn.addEventListener('click', () => setApply(form.hidden));
+
+  // ===== 참관록 =====
+  // 같은 Apps Script 주소로 type: 'review'를 보내면 시트 '참관록' 탭에 저장됩니다.
+  const REVIEWS = [
+    ...LESSONS.map(l => ({ id: l.id, color: l.color, badge: `${l.no}. ${l.subject}`, label: `${l.subject} ${l.period}`, title: l.title, sub: `${l.time} · ${l.room}` })),
+    { id: 'share', color: 'var(--c-share)', badge: '7. 사례 나눔', label: 'AI교무실 사례 나눔 7교시', title: '바이브코딩을 통한 AI교무실 조성 및 업무 자동화 사례 나눔', sub: '15:15~16:00 · 글담도서관' }
+  ];
+  const rForm = document.getElementById('review-form');
+  const rMsg = document.getElementById('review-msg');
+  const rPicks = document.getElementById('review-picks');
+  const rFormHtml = rForm.innerHTML;
+  let rChosen = null;
+
+  rPicks.innerHTML = REVIEWS.map(r => `
+    <button type="button" class="review-pick" data-review="${r.id}" aria-pressed="false" style="--c: ${r.color}">
+      <b>${esc(r.badge)}</b><span>${esc(r.title)}</span>
+    </button>`).join('');
+
+  function chooseReview(id, scroll) {
+    const r = REVIEWS.find(x => x.id === id);
+    if (!r) return;
+    if (!rForm.querySelector('#r-opinion')) rForm.innerHTML = rFormHtml; // 보낸 뒤 다시 쓰기
+    rChosen = r;
+    rPicks.querySelectorAll('[data-review]').forEach(b => b.setAttribute('aria-pressed', b.dataset.review === id));
+    rForm.hidden = false;
+    rForm.style.setProperty('--c', r.color);
+    const badge = document.getElementById('r-badge');
+    badge.textContent = r.badge;
+    badge.style.setProperty('--c', r.color);
+    document.getElementById('r-title').textContent = `${r.label} 참관록`;
+    rMsg.textContent = '';
+    if (scroll) rForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  rPicks.addEventListener('click', e => {
+    const b = e.target.closest('[data-review]');
+    if (b) chooseReview(b.dataset.review, true);
+  });
+
+  // #review-info 같은 주소(수업 카드 버튼·QR)로 오면 그 수업 참관록을 바로 엶
+  function reviewFromHash() {
+    const m = location.hash.match(/^#review-(\w+)$/);
+    if (m) chooseReview(m[1], true);
+  }
+  window.addEventListener('hashchange', reviewFromHash);
+  reviewFromHash();
+
+  // 이름이나 이메일을 적으면 개인정보 동의 칸이 나타남
+  rForm.addEventListener('input', () => {
+    const consent = document.getElementById('r-consent');
+    if (!consent) return;
+    const v = id => document.getElementById(id).value.trim();
+    consent.hidden = !(v('r-name') || v('r-email') || v('r-school'));
+  });
+
+  rForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    rForm.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+    const v = id => document.getElementById(id).value.trim();
+    const data = {
+      type: 'review',
+      lesson: rChosen && rChosen.id,
+      school: v('r-school'),
+      name: v('r-name'),
+      opinion: v('r-opinion'),
+      question: v('r-question'),
+      email: v('r-email'),
+      agree: document.getElementById('r-agree').checked,
+      website: rForm.website.value
+    };
+    const show = (text, error) => { rMsg.textContent = text; rMsg.className = 'form-msg' + (error ? ' error' : ''); };
+    const fail = (id, text) => { const el = document.getElementById(id); el.setAttribute('aria-invalid', 'true'); el.focus(); show(text, true); };
+    if (!data.lesson) return show('참관록을 쓸 수업을 먼저 골라 주세요.', true);
+    if (!data.opinion) return fail('r-opinion', '수업 나눔 의견을 적어 주세요.');
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return fail('r-email', '이메일 주소를 확인해 주세요.');
+    if ((data.name || data.email || data.school) && !data.agree) return fail('r-agree', '이름·학교·이메일을 남기시려면 개인정보 수집·이용에 동의해 주세요.');
+    if (!APPLY_ENDPOINT) return show('참관록 접수 준비 중입니다.', true);
+
+    const btn = rForm.querySelector('button[type=submit]');
+    btn.disabled = true;
+    show('참관록을 보내는 중입니다…');
+    try {
+      const res = await fetch(APPLY_ENDPOINT, { method: 'POST', body: JSON.stringify(data) });
+      const out = await res.json();
+      if (!out.ok || out.kind !== 'review') {
+        btn.disabled = false;
+        // 서버(Code.gs)가 아직 예전 버전이면 참관 신청으로 처리하려다 실패함
+        return show(out.kind || out.ok ? (out.message || '보내지 못했습니다.') : '참관록 접수 준비 중입니다. 잠시 후 다시 시도해 주세요.', true);
+      }
+      const asked = data.question
+        ? (data.email ? '<p>현장에서 답변드리지 못한 질문은 남겨 주신 메일로 답변드리겠습니다.</p>' : '<p>질문은 사례 나눔 시간에 함께 나누겠습니다. 메일로 답변을 받으시려면 이메일을 적어 다시 보내 주세요.</p>')
+        : '';
+      rForm.innerHTML = `<div class="form-done">
+        <span class="status">보내기 완료</span>
+        <h3>${esc(rChosen.label)} 참관록이 접수되었습니다.</h3>
+        <p>소중한 의견 감사합니다.</p>${asked}
+        <p style="margin-top:14px">다른 수업 참관록도 위에서 골라 쓰실 수 있습니다.</p>
+      </div>`;
+    } catch (err) {
+      btn.disabled = false;
+      show('전송 중 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.', true);
     }
   });
 </script>
